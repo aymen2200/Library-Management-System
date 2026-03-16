@@ -1,0 +1,4 @@
+use librarydb;
+
+ALTER TABLE Users
+ADD COLUMN Role TINYINT NOT NULL;
