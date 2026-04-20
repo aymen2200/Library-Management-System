@@ -1,0 +1,91 @@
+
+const db = require('../config/db');
+
+const register = async (req, res) => {
+  const { name, password, email } = req.body;
+
+  if (!name || !password || !email)
+    return res.status(400).json({ error: 'All fields required' });
+
+  // 1. Check if already exists
+  db.query(
+    'SELECT * FROM Users WHERE ContactInformation = ?',
+    [email],
+    async (err, results) => {
+      if (err) return res.status(500).json({ error: 'DB error' });
+
+      if (results.length > 0)
+        return res.status(400).json({ error: 'Already registered' });
+
+      // 2. Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // 3. Insert new user
+      db.query(
+        'INSERT INTO Users (Name, ContactInformation, Password) VALUES (?, ?, ?)',
+        [name, email, hashedPassword],
+        (err) => {
+          if (err) return res.status(500).json({ error: 'DB error' });
+          res.status(201).json({ message: 'Registration successful!' });
+        }
+      );
+    }
+  );
+};
+
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    return res.status(400).json({ error: 'Email and password required' });
+
+  // Find user by email
+  db.query(
+    'SELECT * FROM Users WHERE ContactInformation = ?',
+    [email],
+    async (err, results) => {
+      if (err) return res.status(500).json({ error: 'DB error' });
+
+      if (results.length === 0)
+        return res.status(401).json({ error: 'User not found' });
+
+      const user = results[0];
+
+      const match = await bcrypt.compare(password, user.Password);
+      if (!match)
+        return res.status(401).json({ error: 'Invalid password' });
+
+      const token = jwt.sign(
+        { id: user.UserID, name: user.Name, role: 'consumer' },
+        process.env.JWT_SECRET || 'tempsecret',
+        { expiresIn: '8h' }
+      );
+
+      res.json({ message: 'Login successful', token });
+    }
+  );
+};
+
+const getAllUsers = (req, res) => {
+  db.query(
+    'SELECT UserID, Name, ContactInformation FROM Users',
+    (err, results) => {
+      if (err) return res.status(500).json({ error: 'DB error' });
+      res.json(results);
+    }
+  );
+};
+
+const getMe = (req, res) => {
+  const id = req.user.id;
+
+  db.query(
+    'SELECT UserID, Name, ContactInformation FROM Users WHERE UserID = ?',
+    [id],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: 'DB error' });
+      res.json(results[0]);
+    }
+  );
+};
+
