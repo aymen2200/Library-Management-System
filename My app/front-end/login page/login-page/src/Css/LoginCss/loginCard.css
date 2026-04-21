@@ -1,0 +1,115 @@
+.login-Card {
+    display: flex;
+    height: 530px;
+    width: 900px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 0 50px 5px rgba(0 , 0 , 0 , 0.3);
+}
+
+.signInLeftSide {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom right , #2c7bc1 , #9fd6ec);
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 30px;
+    width: 35%;
+    background-image: url(../../images/1969c3177d6340f0baac264b84ae0441.webp);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.signInLeftSide img {
+    width: 80px ;
+    height: auto ;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: -30px;
+}
+
+.signInLeftSide p{
+    font-size: 1.3em;
+    font-weight: 600;
+    text-align: center;
+}
+
+button{
+    color: white;
+    padding: 15px 40px;
+    font-weight: 600;
+    font-size: 1.18em;
+    border: 1.5px solid white;
+    border-radius: 35px;
+    cursor: pointer;
+    margin-top: 20px;
+    background-color:transparent ;
+    transition: 0.5s ease;
+}
+
+.signInLeftSide button:hover {
+    color: black;
+    background-color: white;
+}
+
+.signInRightSide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 90px;
+}
+
+.signInRightSide h1 {
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.main-paragraph2 {
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.signInRightSide form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sec-paragraph {
+    margin: 15px 0 8px 5px;
+    color: rgb(158, 158, 158);
+}
+
+.signInRightSide input {
+    margin: 0;
+    height: 43px;
+    width: 350px;
+    background-color: rgb(255, 251, 246);
+    text-align: center;
+    border: rgb(224, 220, 220) 1.5px solid;
+    border-radius: 15px;
+    font-size: 1.05em;
+}
+
+.signInRightSide input:focus {
+    background-color: white;
+    border-color: wheat;
+    outline: none;
+    box-shadow: 0 0 2px 3px rgba(245, 222, 179, 0.2);
+}
+
+.signInRightSide button {
+    width: 350px;
+    margin-top: 30px;
+    transition: 0.5s ease ;
+    background-color: wheat;
+}
+
+.signInRightSide button:hover {
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2); 
+}
+
