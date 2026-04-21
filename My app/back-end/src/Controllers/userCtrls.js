@@ -12,7 +12,7 @@ const bcrypt= require('bcrypt');
 const register = async (req, res)=>{
 const {Name, Email, password, phone, cardNumber}= req.body;
 
-if (!Name || !Email || !password || !cardNumber){
+if (!Name || !Email || !password){
     return res.status(400).json({error: 'User name and password are required!'})
 }
 
@@ -38,7 +38,7 @@ const hashedPassword = await bcrypt.hash(password, 10); //password + salt, 10 is
 
 await db.query(
     'INSERT INTO users (Name, Email, PasswordHash, Phone, LibraryCardNumber) VALUES (?,?,?,?,?)',
-    [Name, Email, hashedPassword, phone || null, cardNumber]
+    [Name, Email, hashedPassword, phone || null, cardNumber|| null]
 )
 
 res.status(201).json({message:'the Registration operation is successful!'})

@@ -12,6 +12,8 @@ app.use('/auth', auth);
 app.use('/user', user);
 app.use(logErr);
 app.use(handleErrCli);
+
+
 app.listen(3000, ()=>{
     console.log('Our Server is listening !!')
 })

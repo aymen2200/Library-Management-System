@@ -16,24 +16,26 @@ const login = async (req, res)=>{
         return res.status(400).json({error: 'the Email and the password are required!'}); //Bad request
         } // if are valid then: Find the admin (comparison); admin password is hardcoded: no hashing yet!
     //3- finding the user through the Email:
-    const [admin] = await db.query('SELECT * FROM users WHERE Email = ?',
+    const [rows] = await db.query('SELECT * FROM users WHERE Email = ?',
     [Email]); // the admin array that contains the actual admin object!
         if(admin.length === 0){
         return res.status(401).json({error: 'Admin not found!'})
     }
+    const admin = rows[0];
 
 
-        const match = await bcrypt.compare(password, admin[0].PasswordHash);
+
+        const match = await bcrypt.compare(password, admin.PasswordHash);
         if(!match){
             return res.status(401).json({error: 'Invalid password!'})
         }
         //4- If found: Creating the token:
         const token = jwt.sign( // Three parameters: {userId,userName,userRole .. (information about the user),process.env.JWT_SECRET, {expiresIn: the time you want to end the validity of the login}}
-            {id: admin[0].UserID, userName:admin[0].Name, role: 0},
+            {id: admin.UserID, userName:admin.Name, role: 0},
             process.env.JWT_SECRET || 'tempsecret', //if not found
             {expiresIn:'8h'}
         )
-        res.status(200).json({message: 'The login is successful', id:admin.UserID, token})
+        res.status(200).json({message: 'The login is successful', id:admin[0].UserID, token})
     };
 
     module.exports= {login};
