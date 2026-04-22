@@ -1,6 +1,0 @@
-importing an object from multiple objects without putting const {object}= require(source);
-there is no equal to compare betwenn the strings in node, compare by ===
-const auth = require('../Controllers/authCtrls') then router.post('/', login) instead of const {login}= require...
-const admin = rows[0]; because it contains an object, and you can't access the properties through array.property you can just buy object.property
-const {id} = req.user.id; This is wrong destructuring. It should be: const id = req.user.id; because req.user.id is already a value.
-return res.json(history[0]); But a user can have many borrowings.
