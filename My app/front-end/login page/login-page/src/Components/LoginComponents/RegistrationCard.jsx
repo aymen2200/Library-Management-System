@@ -3,6 +3,8 @@ import image from "../../images/maisondulivre.png";
 import axios from "axios";
 import { useAuthContext } from '../../Contexts/AuthAccept';
 import '../../Css/LoginCss/RegistrationCard.css'
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+
 
 
 const SignUpRightSide = () => {
@@ -37,18 +39,43 @@ const SignUpRightSide = () => {
         }
     };
 
+    const GoogleButton = () => {
+        const login = useGoogleLogin({
+            onSuccess: (credentialResponse) => {
+                console.log(credentialResponse);
+            },
+            onError: () => {
+                console.log('Login Failed');
+            },
+        });
+
+        return (
+            <button className="google-btn" onClick={() => login()}>
+                <img
+                    src="https://developers.google.com/identity/images/g-logo.png"
+                    alt="Google"
+                />
+                Sign up with Google
+            </button>
+        );
+    }
+
     return (
         <div className='signUpRightSide'>
-            <h1>Create Account</h1>            
+            <h1>Create Account</h1>
             <p className='main-paragraph1'>Fill in your details to get started</p>
             <form onSubmit={handleSubmit}>
                 <p className='sec-paragraph'>Name</p>
-                <input onChange={(e) => setName(e.target.value) } type="text" value={name}/>
+                <input onChange={(e) => setName(e.target.value)} type="text" value={name} />
                 <p className='sec-paragraph'>Email Adress</p>
-                <input onChange={(e) => setEmail(e.target.value) } type="email" value={email}/>
+                <input onChange={(e) => setEmail(e.target.value)} type="email" value={email} />
                 <p className='sec-paragraph'>Password</p>
-                <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password}/>
-                <button type='submit'>Sign Up</button>
+                <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password} />
+                <button type='submit' className='main-btn'>Sign Up</button>
+                <p className='divider'>OR</p>
+                <GoogleOAuthProvider clientId="731842341556-42d42glh08b6l0bkt01cjvokha23uto7.apps.googleusercontent.com">
+                    <GoogleButton />
+                </GoogleOAuthProvider>
             </form>
         </div>
     )

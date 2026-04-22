@@ -1,6 +1,6 @@
 .Registration-Card {
     display: flex;
-    height: 530px;
+    height: 600px;
     width: 900px;
     background-color: white;
     border-radius: 20px;
@@ -104,18 +104,57 @@ button{
     outline: none;
 }
 
-.signUpRightSide button {
+.main-btn {
     width: 350px;
     margin-top: 30px;
     transition: 0.5s ease ;
     background-color: wheat;
 }
 
-.signUpRightSide button:hover {
+.main-btn:hover {
     transform: translateY(-3px); 
     box-shadow: 0 6px 12px rgba(0,0,0,0.2); 
 }
 
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 330px;
+  margin:10px 5px 0 5px ;
+}
 
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #ccc;
+}
+
+.google-btn {
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 350px;
+    height: 50px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.google-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.google-btn img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
 
 
