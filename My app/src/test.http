@@ -1,0 +1,30 @@
+GET http://localhost:3000/books
+
+###
+GET http://localhost:3000/books/2
+
+###
+
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+"BookID": 4,
+  
+  "Title": "The Art of Computer Programming",
+  "ISBN": "9780201896831",
+  "PublicationDate": "1968-01-01",
+  "Genre": "Technology",
+  "AdditionalDetails": "A comprehensive monograph by Donald Knuth covering fundamental algorithms.",
+  "CreatedAt": "2026-03-27 10:00:00",
+  "IsDeleted": false
+
+}
+
+###
+PUT http://localhost:3000/books/2
+Content-Type: application/json
+
+{
+  "Title": "Clean Code"
+}
