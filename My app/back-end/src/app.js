@@ -9,6 +9,7 @@ const {logErr, handleErrCli} = require('./middlewares')
 
 
 
+
 app.use('/auth', auth);
 app.use('/user', user);
 app.use(logErr);
