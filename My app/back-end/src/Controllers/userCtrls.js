@@ -76,7 +76,7 @@ const login = async (req, res)=>{
 
 // Getting all users:
 const getAllUsers = async (req, res)=>{
-    const [users] = await db.query('SELECT * FROM Users WHERE Role = 1') 
+    const [users] = await db.query('SELECT * FROM Users WHERE Role = 1 and IsDeleted = 0') 
     const getUsers = users.map(({PasswordHash, Role, ...rest})=> rest)        //destructering the objects and extracting password and returning just rest (all except password)
     res.json(getUsers);
 };
@@ -106,6 +106,21 @@ const userHistory = async (req, res)=>{
     return res.json(history); 
 };
 
+const deleteUser = async (req, res) =>{
+    const userID  = req.params.id;
+    try{
+        const [rows] = await db.query(
+            'Update users set IsDeleted = 1 Where UserID = ? and IsDeleted = 0',
+            [userID]
+        );
+        if (rows.affectedRows == 0) return res.status(404).json({message : "user not found!"});
+        res.status(201).json({message : `the user ${userID} is Deleted!`})
+    } catch(err){
+        console.error(err);
+        res.status(500).json({message : "Server error!"})
+    }
+}
 
 
-module.exports = {register, login, getAllUsers, getMe, userHistory};
+
+module.exports = {register, login, getAllUsers, getMe, userHistory, deleteUser};

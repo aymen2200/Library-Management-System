@@ -138,7 +138,7 @@ const createBook = async (req, res) => {
         .status(409)
         .json({ message: "A book with the same ISBN already exists." });
     }
-    await connection.beginTransaction();
+    await connection.beginTransaction(); //We need it when multiple queries depend on each other — meaning if one fails, the others should not be saved.
     const [result] = await connection.execute(
       `INSERT INTO Books 
             (Title, ISBN, PublicationDate, Genre, AdditionalDetails, CreatedAt, IsDeleted)
