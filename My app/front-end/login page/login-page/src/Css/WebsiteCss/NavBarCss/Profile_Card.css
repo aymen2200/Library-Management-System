@@ -1,0 +1,33 @@
+.profile_card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 7px 18px;
+    border-radius: 20px;
+    transition: background-color 0.2s;
+}
+
+.profile_card:hover {
+    background-color: rgba(221, 183, 167, 0.15);
+}
+
+.profile_card img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid #DDB7A7;
+}
+
+.profile-name {
+    color: #DDB7A7;
+    font-size: 14px;
+    font-weight: 600;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}

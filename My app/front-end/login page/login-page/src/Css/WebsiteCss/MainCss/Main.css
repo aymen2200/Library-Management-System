@@ -1,0 +1,8 @@
+.BooksCards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 50px 30px;
+    background-color: #F9EDD8;
+    margin: 0;
+}
