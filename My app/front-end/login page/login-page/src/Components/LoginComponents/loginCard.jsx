@@ -15,29 +15,7 @@ const SignInRightSide = () => {
     const [role, setRole] = useState('');
     const navigate = useNavigate();
 
-    {/*const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            const res = await axios.post("http://localhost:3000/user/login", {
-                email,
-                password,
-                role,
-            });
-
-            if (res.data.success) {
-                UserInfo(res.data.user.name, res.data.user.email, res.data.token);
-                setEmail("");
-                setPassword("");
-                login();
-            }
-
-        } catch (err) {
-            console.log("Login failed", err.response?.data);
-        }
-    };*/}
-
-    function handleSubmit(e) {
+    function LoginSubmit(e) {
         e.preventDefault();
         UserInfo("Ahmed", email, 33);
         login(); 
@@ -60,7 +38,7 @@ const SignInRightSide = () => {
                     <option value="librarian">Librarian</option>
                 </select>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={LoginSubmit}>
                 <p className='sec-paragraph'>Email Adress</p>
                 <input onChange={(e) => setEmail(e.target.value)} type='email' value={email} />
                 <p className='sec-paragraph'>Password</p>

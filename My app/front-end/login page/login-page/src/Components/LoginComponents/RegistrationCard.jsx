@@ -17,31 +17,7 @@ const SignUpRightSide = () => {
     const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate()
 
-    {/*const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            const res = await axios.post("http://localhost:3000/user/register", {
-                name,
-                email,
-                password,
-            });
-
-            if (res.data.success) {
-                UserInfo(name , email , res.data.token )
-                setName("");
-                setEmail("");
-                setPassword("");
-                localStorage.setItem("token", res.data.token);
-                login();
-            }
-
-        } catch (err) {
-            console.log("Login failed", err.response?.data);
-        }
-    };*/}
-
-    function handleSubmit(e) {
+    function RegistrationSubmit(e) {
         e.preventDefault();
         UserInfo(name, email, 33);
         login(); 
@@ -76,7 +52,7 @@ const SignUpRightSide = () => {
         <div className='signUpRightSide'>
             <h1>Create Account</h1>
             <p className='main-paragraph1'>Fill in your details to get started</p>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={RegistrationSubmit}>
                 <p className='sec-paragraph'>Name</p>
                 <input onChange={(e) => setName(e.target.value)} type="text" value={name} placeholder='Enter your Name' />
                 <p className='sec-paragraph'>Email Adress</p>

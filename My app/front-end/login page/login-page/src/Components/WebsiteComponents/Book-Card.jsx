@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useBookContext } from "../../Contexts/Favorites";
-import "../../Css/WebsiteCss/MainCss/BookCard.css";
+import "../../Css/WebsiteCss/BookCard.css";
 import BorrowModal from "./BorrowingModal";
-import { useState } from "react";
 
 const BookCard = ({ book }) => {
-  const { id, title, author, available, coverImg } = book;
+
+  const id = book.id;
+  const title = book.volumeInfo?.title;
+  const author = book.volumeInfo?.authors?.[0];
+  const coverImg = book.volumeInfo?.imageLinks?.thumbnail;
+  const available = true;
 
   const [showModal, setShowModal] = useState(false);
 
@@ -50,7 +54,7 @@ const BookCard = ({ book }) => {
             onClick={() => setShowModal(true)}
           >
             {available ? "Borrow Now" : "Reserve Later"}
-          </button>  */}
+          </button> */}
           {showModal && <BorrowModal book={book} onClose={() => setShowModal(false)} />}
         </div>
       </div>
