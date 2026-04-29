@@ -1,111 +1,175 @@
 .login-Card {
     display: flex;
-    height: 530px;
-    width: 900px;
-    background-color: white;
-    border-radius: 20px;
+    height: 600px;
+    width: 980px;
+    background-color: #F8EFE2;
+    border-radius: 15px;
     box-shadow: 0 0 50px 5px rgba(0 , 0 , 0 , 0.3);
+    overflow: hidden;
 }
 
 .signInLeftSide {
     color: white;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(to bottom right , #2c7bc1 , #9fd6ec);
     border-radius: 20px;
     justify-content: center;
     align-items: center;
     padding: 50px 30px;
-    width: 35%;
-    background-image: url(../../images/1969c3177d6340f0baac264b84ae0441.webp);
+    width: 40%;
+    background-image: url(../../images/LoginPage-images/side-loginPage-img.png);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-.signInLeftSide img {
-    width: 80px ;
-    height: auto ;
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -150px;
+    margin-bottom: 0px;
+}
+
+.logo img {
+    width: 50px;
+    height: auto;
     border-radius: 8px;
     cursor: pointer;
-    margin-top: -30px;
 }
 
-.signInLeftSide p{
-    font-size: 1.3em;
+.signInLeftSide .logo h3 {
+    color: #58151C;
+    display: flex;
+    font-weight: 600;
+    font-size: 1.1em;
+    margin: 10px 0 0 0;
+}
+
+.signInLeftSide .logo p{
+    color: #58151C;
+    display: flex;
+    font-size: 0.7em;
+    margin-top: 8px;
+    width: 100%;
+}
+
+.signInLeftSide h1 {
+    color: #58151C;
+    margin: 30px 0 0 0;
+}
+
+.signInLeftSide p {
+    font-size: 0.9em;
     font-weight: 600;
     text-align: center;
+    color: black;
+    letter-spacing: 1px;
+    width: 250px;
 }
 
-button{
+.signInLeftSide button {
     color: white;
     padding: 15px 40px;
     font-weight: 600;
     font-size: 1.18em;
-    border: 1.5px solid white;
+    border: 2px solid white;
     border-radius: 35px;
     cursor: pointer;
-    margin-top: 20px;
-    background-color:transparent ;
+    margin-bottom: -130px;
+    margin-top: 200px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(12px);
     transition: 0.5s ease;
+    position: relative;
+    z-index: 1000;
 }
 
 .signInLeftSide button:hover {
-    color: black;
-    background-color: white;
+    background-color: transparent;
 }
 
 .signInRightSide {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-left: 90px;
+    background-color: #F8EFE2;
+    width: 60%;
 }
 
 .signInRightSide h1 {
     margin-bottom: 0;
     text-align: center;
+    color: #58151C;
 }
 
 .main-paragraph2 {
-    margin-bottom: 50px;
     text-align: center;
+    margin-bottom: 10px;
+    color: #7E756D;
+}
+
+.selection {
+    margin-top: 40px;
+}
+
+.select-input {
+  height: 45px;
+  width: 440px;
+  background-color: #FCF6EE;
+  padding-left: 5px;
+  border: rgb(224, 220, 220) 1.5px solid;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 1.01em;
+  outline: none;
+  cursor: pointer;
+  color: #3d3d3d;
 }
 
 .signInRightSide form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
+    padding-left: 125px;
+    margin-top: 0px;
 }
 
 .sec-paragraph {
-    margin: 15px 0 8px 5px;
-    color: rgb(158, 158, 158);
+    margin: 20px 0 8px 3px;
+    color: #7E756D;
 }
 
 .signInRightSide input {
     margin: 0;
-    height: 43px;
-    width: 350px;
-    background-color: rgb(255, 251, 246);
-    text-align: center;
+    height: 40px;
+    width: 430px;
+    background-color: #FCF6EE;
+    padding-left: 5px;
     border: rgb(224, 220, 220) 1.5px solid;
-    border-radius: 15px;
-    font-size: 1.05em;
+    border-radius: 10px;
+    color: #3d3d3d;
+    font-weight: 500;
+    font-size: 1.01em;
 }
 
 .signInRightSide input:focus {
     background-color: white;
-    border-color: wheat;
     outline: none;
-    box-shadow: 0 0 2px 3px rgba(245, 222, 179, 0.2);
 }
 
 .signInRightSide button {
-    width: 350px;
-    margin-top: 30px;
-    transition: 0.5s ease ;
-    background-color: wheat;
+    width: 440px;
+    height: 40px;
+    margin-top: 50px;
+    transition: 0.5s ease;
+    background-color: #58151C;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: 500;
+    font-size: 1.18em;
 }
 
 .signInRightSide button:hover {

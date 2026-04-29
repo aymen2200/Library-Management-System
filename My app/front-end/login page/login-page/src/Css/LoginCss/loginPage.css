@@ -5,6 +5,18 @@ body {
     min-height: 100vh;
 }
 
+.auth-page {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url(../../images/LoginPage-images/Background-patterns-sol.png);
+    background-size: cover;      
+    background-position: center;  
+    background-repeat: no-repeat;
+}
+
 .card-wrapper {
     animation-duration: 1s;
     animation-timing-function: ease;

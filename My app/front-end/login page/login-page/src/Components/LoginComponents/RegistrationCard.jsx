@@ -1,54 +1,78 @@
 import { useState } from 'react'
-import image from "../../images/maisondulivre.png";
+import image from "../../images/Logos/Logo-light.png";
 import axios from "axios";
-import { useAuthContext } from '../../Contexts/AuthAccept';
+import { useUserContext } from '../../Contexts/User';
 import '../../Css/LoginCss/RegistrationCard.css'
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom'
+
 
 
 const SignUpRightSide = () => {
 
-    const { login } = useAuthContext();
+    const { login, UserInfo } = useUserContext();
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+    const navigate = useNavigate()
 
-    const handleSubmit = async (e) => {
+    function RegistrationSubmit(e) {
         e.preventDefault();
+        UserInfo(name, email, 33);
+        login(); 
+        setName("");
+        setEmail("");
+        setPassword("");
+        navigate('/');
+    }
 
+<<<<<<< HEAD
         try {
             const res = await axios.post("http://localhost:3000/user/register", {
                 Name,
                 Email,
                 password,
             });
+=======
+    const GoogleButton = () => {
+        const login = useGoogleLogin({
+            onSuccess: (credentialResponse) => {
+                console.log(credentialResponse);
+            },
+            onError: () => {
+                console.log('Login Failed');
+            },
+        });
+>>>>>>> fc9beec5f99a155cfdcd715783acace1f62633b5
 
-            if (res.data.success) {
-                setName("");
-                setEmail("");
-                setPassword("");
-                localStorage.setItem("token", res.data.token);
-                login();
-                console.log("Login success");
-            }
-
-        } catch (err) {
-            console.log("Login failed", err.response?.data);
-        }
-    };
+        return (
+            <button className="google-btn" onClick={() => login()}>
+                <img
+                    src="https://developers.google.com/identity/images/g-logo.png"
+                    alt="Google"
+                />
+                Sign up with Google
+            </button>
+        );
+    }
 
     return (
         <div className='signUpRightSide'>
-            <h1>Create Account</h1>            
+            <h1>Create Account</h1>
             <p className='main-paragraph1'>Fill in your details to get started</p>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={RegistrationSubmit}>
                 <p className='sec-paragraph'>Name</p>
-                <input onChange={(e) => setName(e.target.value) } type="text" value={name}/>
+                <input onChange={(e) => setName(e.target.value)} type="text" value={name} placeholder='Enter your Name' />
                 <p className='sec-paragraph'>Email Adress</p>
-                <input onChange={(e) => setEmail(e.target.value) } type="email" value={email}/>
+                <input onChange={(e) => setEmail(e.target.value)} type="email" value={email} placeholder='Enter your Email' />
                 <p className='sec-paragraph'>Password</p>
-                <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password}/>
+                <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password} placeholder='Enter your Password' />
                 <button type='submit'>Sign Up</button>
+                <p className='divider'>or</p>
+                <GoogleOAuthProvider clientId="731842341556-42d42glh08b6l0bkt01cjvokha23uto7.apps.googleusercontent.com">
+                    <GoogleButton />
+                </GoogleOAuthProvider>
             </form>
         </div>
     )
@@ -57,7 +81,11 @@ const SignUpRightSide = () => {
 const SignUpLeftSide = ({ Click }) => {
     return (
         <div className='signUpLeftSide'>
-            <img src={image} alt='logo' />
+            <div className="logo">
+                <img src={image} alt='logo' />
+                <h3>Knowledge Library</h3>
+                <p>Where the Journey Begins</p>
+            </div>
             <h1>Welcome Back!</h1>
             <p>Enter your personal details to use all the features</p>
             <button onClick={Click}>Sign In</button>

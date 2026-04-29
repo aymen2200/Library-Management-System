@@ -1,0 +1,145 @@
+nav , .navbar {
+    display: flex;
+    align-items: center;
+    background-color: #55151C;
+    padding: 0 24px;
+    height: 60px;
+    width: 100%;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+
+
+.left_side a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.Logo-img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
+.left_side .logo-text {
+    display: flex;
+    flex-direction: column; 
+}
+
+.left_side h3 {
+    color: #DDB7A7;
+    font-size: 16px;
+    margin: 0;
+}
+
+.left_side p {
+    color: #DDB7A7;
+    font-size: 11px;
+    margin: 0;
+    opacity: 0.75;
+}
+
+
+.midlle-side {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+}
+
+.nav-links {
+    color: #DDB7A7;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+
+.nav-links:hover {
+    background-color: rgba(221, 183, 167, 0.15);
+}
+
+
+.nav-links p {
+    margin: 0;
+    color: #DDB7A7;
+}
+
+
+.nav-links ul {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #55151C;
+    border: 1px solid rgba(221, 183, 167, 0.2);
+    list-style: none;
+    padding: 6px 0;
+    margin: 0;
+    border-radius: 8px;
+    min-width: 150px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.nav-links ul li {
+    padding: 8px 16px;
+    color: #DDB7A7;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.nav-links ul li:hover {
+    background-color: rgba(221, 183, 167, 0.15);
+}
+
+
+.right-side {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    text-decoration: none;
+}
+
+
+.Login-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sign-up-button {
+    color: #55151C;
+    background-color: #DDB7A7;
+    padding: 7px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+.sign-up-button:hover {
+    opacity: 0.85;
+}
+
+.sign-in-button {
+    color: #DDB7A7;
+    background-color: transparent;
+    border: 1.5px solid #DDB7A7;
+    padding: 7px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.sign-in-button:hover {
+    background-color: rgba(221, 183, 167, 0.15);
+}
+

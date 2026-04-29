@@ -1,0 +1,44 @@
+footer {
+  background: #3d0c14;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 48px;
+  border-top: 3px solid #e8c97a;
+  height: 10px;
+}
+
+footer div {
+  display: flex;
+  gap: 16px;
+}
+
+footer div a {
+  color: #c4a882;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+footer div a:hover {
+  color: #e8c97a;
+}
+
+footer a {
+  color: #e8d5b7;
+  text-decoration: none;
+  font-size: 14px;
+  border: 1px solid rgba(232, 201, 122, 0.35);
+  padding: 10px 20px;
+  border-radius: 6px;
+}
+
+footer a:hover {
+  border-color: #e8c97a;
+  color: #e8c97a;
+}
+
+footer p {
+  color: #7a5c42;
+  font-size: 13px;
+  margin: 0;
+}
