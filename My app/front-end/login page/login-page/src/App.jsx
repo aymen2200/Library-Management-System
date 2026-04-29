@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { UserProvider } from "./Contexts/User";
 import { BookProvider } from "./Contexts/Favorites";
 import Navbar from "./Components/WebsiteComponents/NavbarComponents/NavBar";
+import Footer from "./Components/WebsiteComponents/Footer";
 import Login from "./Pages/loginPage";
 import MainPage from "./Pages/Main";
 import "./App.css";
@@ -9,14 +10,16 @@ import "./App.css";
 const AppContent = () => {
   const location = useLocation();
   const hideNavbar = ["/auth"].includes(location.pathname);
+  const hideFooter = ["/auth"].includes(location.pathname);
 
   return (
     <>
-      {!hideNavbar && <Navbar />}
+      {!hideNavbar && ( <Navbar /> )}
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/auth" element={<Login />} />
       </Routes>
+      {!hideFooter && ( <Footer /> )}
     </>
   );
 };
