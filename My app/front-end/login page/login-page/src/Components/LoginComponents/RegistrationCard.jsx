@@ -18,8 +18,8 @@ const SignUpRightSide = () => {
 
         try {
             const res = await axios.post("http://localhost:3000/user/register", {
-                name,
-                email,
+                Name,
+                Email,
                 password,
             });
 
