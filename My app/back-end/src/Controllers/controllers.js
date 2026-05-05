@@ -377,6 +377,40 @@ const returnBook = async (req, res) => {
   }
 };
 
+const addToFavorite = async (req, res, next)=>{
+  const userID = req.user.id;
+  const {bookID} = req.body;
+  try{
+    const [rows] = await db.query(
+      'Select * from books where BookID= ?',
+      [bookID]
+    )
+    if (rows.length == 0){
+      return res.status(404).json({error : "the book Not found"})
+    }
+
+    const [existing] = await  db.query(
+      'Select * from favorites where BookID = ? and UserID = ?',
+      [bookID, userID]
+    )
+
+    if (existing.length > 0){
+      return res.status(400).json({error : "the book is already in the favorites"})
+    }
+
+    await db.query(
+      'Insert Into favaorites (BookID, UserID) Values (?,?)',
+      [bookID, userID]
+    )
+
+    res.status(200).json({message : "the book is added to favorites!"})
+  }
+  catch(err){
+    next(err);
+  }
+}
+
+
 module.exports = {
   getAllBooks,
   createBook,
@@ -390,4 +424,5 @@ module.exports = {
   getFines,
   addCopy,
   payFine,
+  addToFavorite
 };

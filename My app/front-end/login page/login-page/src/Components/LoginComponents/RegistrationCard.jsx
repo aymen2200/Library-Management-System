@@ -27,6 +27,14 @@ const SignUpRightSide = () => {
         navigate('/');
     }
 
+<<<<<<< HEAD
+        try {
+            const res = await axios.post("http://localhost:3000/user/register", {
+                Name,
+                Email,
+                password,
+            });
+=======
     const GoogleButton = () => {
         const login = useGoogleLogin({
             onSuccess: (credentialResponse) => {
@@ -36,6 +44,7 @@ const SignUpRightSide = () => {
                 console.log('Login Failed');
             },
         });
+>>>>>>> fc9beec5f99a155cfdcd715783acace1f62633b5
 
         return (
             <button className="google-btn" onClick={() => login()}>
