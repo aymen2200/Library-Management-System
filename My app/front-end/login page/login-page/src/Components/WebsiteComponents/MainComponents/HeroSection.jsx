@@ -21,7 +21,7 @@ const HeroSection = () => {
                         Discover a vast collection of books across all genres. <br />
                         Borrow what you love — easily and safely.
                     </p>
-                    <button className="hero-btn" onClick={() => navigate("/books")}>
+                    <button className="hero-btn" onClick={() => navigate("/AllBooks")}>
                         Explore Books
                     </button>
                 </div>

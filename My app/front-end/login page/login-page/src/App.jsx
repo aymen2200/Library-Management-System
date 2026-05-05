@@ -5,6 +5,7 @@ import Navbar from "./Components/WebsiteComponents/NavbarComponents/NavBar";
 import Footer from "./Components/WebsiteComponents/Footer";
 import Login from "./Pages/loginPage";
 import MainPage from "./Pages/Main";
+import AllBooksPage from "./Pages/AllBooksPage";
 import "./App.css";
 
 const AppContent = () => {
@@ -18,6 +19,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/auth" element={<Login />} />
+        <Route path="/AllBooks" element={<AllBooksPage/>} />
       </Routes>
       {!hideFooter && ( <Footer /> )}
     </>

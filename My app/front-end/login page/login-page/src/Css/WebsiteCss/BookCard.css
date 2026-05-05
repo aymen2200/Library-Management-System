@@ -9,9 +9,14 @@
   align-items: center;
   padding: 16px;
   gap: 30px;
-  transition:0.22s ease;
-  width: 250px;
-  height: 180px;
+  transition: 0.22s ease;
+  height: 160px;
+  animation: fadeSlideUp 0.9s ease;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0 }
+  to   { opacity: 1}
 }
 
 .book-card:hover {
@@ -21,8 +26,8 @@
 
 .cover-container {
   flex-shrink: 0;
-  width: 110px;
-  height: 170px;
+  width: 100px;
+  height: 150px;
   border-radius: 6px;
   overflow: hidden;
   position: relative;
@@ -101,6 +106,10 @@
   color: #2a0a0a;
   margin: 0;
   line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .book-author {

@@ -18,8 +18,7 @@
   background-size: cover;
   background-position: center;
   transform: scale(1.05);
-  animation: slowZoom 12s ease-out forwards;
-  background-attachment: fixed;
+  animation: slowZoom 3s ease-out forwards;
 }
  
 @keyframes slowZoom {

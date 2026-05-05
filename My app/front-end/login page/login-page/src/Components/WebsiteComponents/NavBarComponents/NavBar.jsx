@@ -32,7 +32,7 @@ const NavBar = () => {
             </div>
             <div className="midlle-side">
                 <Link to='/' className="nav-links">Home</Link>
-                <Link to='' className="nav-links">All Books</Link>
+                <Link to='/AllBooks' className="nav-links">All Books</Link>
                 <div className="nav-links"
                     onMouseEnter={() => setIsOpen(true)}
                     onMouseLeave={() => setIsOpen(false)}>
@@ -48,7 +48,7 @@ const NavBar = () => {
                     )}
                 </div>
                 <Link to='' className="nav-links">Favorites</Link>
-                <Link to='' className="nav-links">Already borrowed</Link>
+                <Link to='' className="nav-links">My Reading Journey</Link>
             </div>
             <div className="left-side">
                 {isAuthenticated? 

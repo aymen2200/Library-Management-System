@@ -48,10 +48,35 @@ export const getPopularBooks = async () => {
   return shuffled.slice(0, 8);
 };
 
+export const getAllBooks = async (page = 1, limit = 20) => {
+  const startIndex = (page - 1) * limit;
+  const { data } = await axios.get(
+    `${BASE_URL}?q=subject:fiction&startIndex=${startIndex}&maxResults=${limit}&key=${API_KEY}`
+  );
+  return { books: data.items || [], totalItems: data.totalItems || 0 };
+};
+
 export const searchBooks = async (query, page = 1, limit = 20) => {
   const startIndex = (page - 1) * limit;
   const { data } = await axios.get(
     `${BASE_URL}?q=${encodeURIComponent(query)}&startIndex=${startIndex}&maxResults=${limit}&key=${API_KEY}`
   );
-  return { books: data.items, totalItems: data.totalItems };
+  console.log("searchBooks response:", data);    
+  console.log("items:", data.items);             
+  return { books: data.items || [], totalItems: data.totalItems || 0 };
 };
+
+export const getBookDescription = async (title, author) => {
+  const query = author ? `${title} ${author}` : title;
+  const { data } = await axios.get(
+    `${BASE_URL}?q=${encodeURIComponent(query)}&maxResults=1&key=${API_KEY}`
+  );
+  const volumeInfo = data.items?.[0]?.volumeInfo;
+  return {
+    description: volumeInfo?.description || "No description available.",
+    publishedDate: volumeInfo?.publishedDate || "Unknown"
+  };
+};
+
+
+
