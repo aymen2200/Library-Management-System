@@ -9,41 +9,25 @@ const bcrypt= require('bcrypt');
 // User regestering:
 //1. getting the user information:
 
-const register = async (req, res)=>{
-const {Name, Email, password, phone, cardNumber}= req.body;
-
-if (!Name || !Email || !password){
-    return res.status(400).json({error: 'User name and password are required!'})
-}
-
-//2- verifying if it is already registered:
-
-const Users = await db.query('SELECT * FROM users WHERE Email = ?', [Email]);
-const actualUser = Users[0]; 
-if (actualUser.length > 0) return res.status(400).json({error : 'You are already registered!'})
-    /* You can just do : const [Users] = db.query('SELECT * FROM users WHERE Email = ?', [Email]); it returns the first array
-db.query() returns:
-[
-    [                          // ← first element: rows (array of objects)
-        { UserID: 1, ... },    // row 1
-        { UserID: 2, ... },    // row 2
-    ],
-    [...]                      // ← second element: fields/metadata (you ignore this)
-]
-*/
-
-//3- Hashing the password:
-
-const hashedPassword = await bcrypt.hash(password, 10); //password + salt, 10 is how match the password is treated 2^10..
-
-await db.query(
-    'INSERT INTO users (Name, Email, PasswordHash, Phone, LibraryCardNumber) VALUES (?,?,?,?,?)',
-    [Name, Email, hashedPassword, phone || null, cardNumber|| null]
-)
-
-res.status(201).json({message:'the Registration operation is successful!'})
-
-}
+const register = async (req, res) => {
+    const { Name, Email, password, phone, cardNumber } = req.body;
+    if (!Name || !Email || !password)
+        return res.status(400).json({ error: 'User name and password are required!' });
+    try {
+        const [users] = await db.query('SELECT * FROM users WHERE Email = ?', [Email]);
+        if (users.length > 0)
+            return res.status(400).json({ error: 'You are already registered!' });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await db.query(
+            'INSERT INTO users (Name, Email, PasswordHash, Phone, LibraryCardNumber) VALUES (?,?,?,?,?)',
+            [Name, Email, hashedPassword, phone || null, cardNumber || null]
+        );
+        res.status(201).json({ message: 'Registration successful!' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
 
 // user login
 

@@ -1,26 +1,27 @@
-const express = require("express")
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const {getAllBooks, createBook, getBook, updateBook, deleteBook, borrowBook, returnBook, getCopies, addCopy, getBorrowings, getFines, payFine, addToFavorite} = require("../controllers/controllers")
+const { getAllBooks, createBook, getBook, updateBook, deleteBook, borrowBook, returnBook, getCopies, addCopy, getBorrowings, getFines, payFine, addToFavorite } = require("../controllers/controllers");
 const { authenticate, authorize } = require('../middlewares');
 
-router.get('/books',getAllBooks).post('/books',createBook)
 
-router.get('/books/:id',getBook).put('/books/:id',updateBook).delete('/books/:id',deleteBook)
+router.get('/borrowings', getBorrowings);
 
-router.post('/books/:id/borrow',borrowBook)
+router.get('/fines', getFines);
+router.patch('/fines/:id/pay', payFine);
 
-router.patch('/books/copies/:copyid/return',returnBook)
+// FIX 3: '/copies/:copyid/return' is placed BEFORE '/:id' for the same reason above.
+router.patch('/copies/:copyid/return', returnBook);
 
-router.get('/books/:id/copies',getCopies).post('/books/:id/copies',addCopy)
+router.get('/', getAllBooks).post('/', createBook);
 
-router.get('/borrowings',getBorrowings)
+router.get('/:id', getBook).put('/:id', updateBook).delete('/:id', deleteBook);
 
-router.get('/fines',getFines)
+router.post('/:id/borrow', borrowBook);
 
-router.patch('/fines/:id/pay',payFine)
+router.get('/:id/copies', getCopies).post('/:id/copies', addCopy);
 
-router.post('/fav/addFav', authenticate, addToFavorite)
+router.post('/fav/addFav', authenticate, addToFavorite);
 
 
 module.exports = router;

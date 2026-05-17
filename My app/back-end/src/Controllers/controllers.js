@@ -1,18 +1,20 @@
-const { Connection } = require("mysql2");
-const db = require("../database/db");
+const db = require("../config/db"); // FIX 1: was "../database/db" — corrected to match your actual config path
 
 //All books
 const getAllBooks = async (req, res) => {
   const { title, author, genre } = req.query;
 
   try {
+    // FIX 2: GROUP BY was baked into the base query string, so any appended AND filters
+    // ended up after GROUP BY, which is invalid SQL. Now GROUP BY is appended last.
     let query = `SELECT books.*, GROUP_CONCAT(authors.fullname SEPARATOR ', ') AS Authors
 FROM books
 INNER JOIN bookauthors ON books.bookid = bookauthors.bookid
 INNER JOIN authors ON authors.authorid = bookauthors.authorid
-WHERE books.IsDeleted = FALSE
-GROUP BY books.bookid`;
+WHERE books.IsDeleted = FALSE`;
+
     const params = [];
+
     if (title) {
       query += ` AND books.title LIKE ?`;
       params.push(`%${title}%`);
@@ -25,6 +27,9 @@ GROUP BY books.bookid`;
       query += ` AND books.genre LIKE ?`;
       params.push(`%${genre}%`);
     }
+
+    query += ` GROUP BY books.bookid`; // always appended last, after all WHERE filters
+
     const [rows] = await db.execute(query, params);
 
     if (rows.length === 0) {
@@ -121,12 +126,14 @@ const createBook = async (req, res) => {
     AuthorName,
     Barcode,
   } = req.body;
+
   if (!Title || !ISBN || !PublicationDate || !Genre || !AuthorName) {
     return res.status(400).json({
       message:
         "Title, ISBN, Publication Date, Genre, Barcode and Author Name are required.",
     });
   }
+
   const connection = await db.getConnection();
   try {
     const [existing] = await connection.execute(
@@ -138,7 +145,9 @@ const createBook = async (req, res) => {
         .status(409)
         .json({ message: "A book with the same ISBN already exists." });
     }
-    await connection.beginTransaction(); //We need it when multiple queries depend on each other — meaning if one fails, the others should not be saved.
+
+    await connection.beginTransaction();
+
     const [result] = await connection.execute(
       `INSERT INTO Books 
             (Title, ISBN, PublicationDate, Genre, AdditionalDetails, CreatedAt, IsDeleted)
@@ -146,7 +155,6 @@ const createBook = async (req, res) => {
       [Title, ISBN, PublicationDate, Genre, AdditionalDetails || null],
     );
 
-    //creating the first physical copy
     const newBookID = result.insertId;
 
     await connection.execute(
@@ -155,11 +163,11 @@ const createBook = async (req, res) => {
       [newBookID, Barcode],
     );
 
-    //handling authors logic
     const [author] = await connection.execute(
       `SELECT AuthorID FROM authors WHERE FullName = ?`,
       [AuthorName],
     );
+
     let AuthorID;
     if (author.length > 0) {
       AuthorID = author[0].AuthorID;
@@ -168,7 +176,7 @@ const createBook = async (req, res) => {
         `INSERT INTO authors (FullName) VALUES(?)`,
         [AuthorName],
       );
-      AuthorID = newAuthor[0].insertId;
+      AuthorID = newAuthor.insertId; // FIX 3: was newAuthor[0].insertId — insertId is on the result directly, not on a row
     }
 
     await connection.execute(
@@ -229,11 +237,11 @@ const updateBook = async (req, res) => {
     const { Title, ISBN, PublicationDate, Genre, AdditionalDetails } = req.body;
     const [result] = await db.execute(
       `UPDATE books SET 
-            Title = COALESCE (?,Title),
-            ISBN = COALESCE (?,ISBN),
-            PublicationDate = COALESCE (?,PublicationDate),
-            Genre = COALESCE (?,Genre),
-            AdditionalDetails = COALESCE (?,AdditionalDetails)
+            Title = COALESCE(?,Title),
+            ISBN = COALESCE(?,ISBN),
+            PublicationDate = COALESCE(?,PublicationDate),
+            Genre = COALESCE(?,Genre),
+            AdditionalDetails = COALESCE(?,AdditionalDetails)
             WHERE BookID = ?`,
       [
         Title ?? null,
@@ -263,7 +271,6 @@ const deleteBook = async (req, res) => {
       `UPDATE books SET IsDeleted = TRUE WHERE BookID = ? AND IsDeleted = FALSE`,
       [id],
     );
-
     if (result.affectedRows === 0) {
       return res
         .status(404)
@@ -282,7 +289,6 @@ const borrowBook = async (req, res) => {
   const { userid } = req.body;
   const connection = await db.getConnection();
   try {
-    //number of copies
     const [rows] = await db.execute(
       `SELECT *
             FROM bookcopies INNER JOIN books ON books.bookid = bookcopies.bookid 
@@ -293,7 +299,7 @@ const borrowBook = async (req, res) => {
     );
     if (rows.length === 0) {
       res.status(409).json({
-        message: "This book is unavailable right now.Try again later.",
+        message: "This book is unavailable right now. Try again later.",
       });
       return;
     }
@@ -313,7 +319,6 @@ const borrowBook = async (req, res) => {
     );
 
     await connection.commit();
-
     res.status(200).json({ message: "Book borrowed successfully" });
   } catch (error) {
     await connection.rollback();
@@ -329,7 +334,6 @@ const returnBook = async (req, res) => {
   const { copyid } = req.params;
   const connection = await db.getConnection();
   try {
-    //fines logic
     const [records] = await connection.execute(
       `SELECT BorrowingRecordID, UserID, DueDate, 
                 DATEDIFF(CURDATE(), DueDate) AS DaysOverdue FROM borrowingrecords 
@@ -343,6 +347,7 @@ const returnBook = async (req, res) => {
         .json({ message: "This book copy has no active borrowing record" });
       return;
     }
+
     await connection.beginTransaction();
     const { BorrowingRecordID, UserID, DaysOverdue } = records[0];
 
@@ -355,7 +360,6 @@ const returnBook = async (req, res) => {
       );
     }
 
-    //return logic
     await connection.execute(
       `UPDATE bookcopies SET AvailabilityStatus = 'Available' WHERE CopyID = ?`,
       [copyid],
@@ -377,38 +381,37 @@ const returnBook = async (req, res) => {
   }
 };
 
-const addToFavorite = async (req, res, next)=>{
+//add to favorites
+const addToFavorite = async (req, res, next) => {
   const userID = req.user.id;
-  const {bookID} = req.body;
-  try{
+  const { bookID } = req.body;
+  try {
     const [rows] = await db.query(
-      'Select * from books where BookID= ?',
+      'SELECT * FROM books WHERE BookID = ?',
       [bookID]
-    )
-    if (rows.length == 0){
-      return res.status(404).json({error : "the book Not found"})
+    );
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Book not found" });
     }
 
-    const [existing] = await  db.query(
-      'Select * from favorites where BookID = ? and UserID = ?',
+    const [existing] = await db.query(
+      'SELECT * FROM favorites WHERE BookID = ? AND UserID = ?',
       [bookID, userID]
-    )
-
-    if (existing.length > 0){
-      return res.status(400).json({error : "the book is already in the favorites"})
+    );
+    if (existing.length > 0) {
+      return res.status(400).json({ error: "The book is already in favorites" });
     }
 
     await db.query(
-      'Insert Into favaorites (BookID, UserID) Values (?,?)',
+      'INSERT INTO favorites (BookID, UserID) VALUES (?,?)',
       [bookID, userID]
-    )
+    );
 
-    res.status(200).json({message : "the book is added to favorites!"})
-  }
-  catch(err){
+    res.status(200).json({ message: "The book is added to favorites!" });
+  } catch (err) {
     next(err);
   }
-}
+};
 
 
 module.exports = {
@@ -424,5 +427,5 @@ module.exports = {
   getFines,
   addCopy,
   payFine,
-  addToFavorite
+  addToFavorite,
 };
