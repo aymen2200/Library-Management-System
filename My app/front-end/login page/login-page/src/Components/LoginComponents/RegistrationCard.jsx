@@ -6,6 +6,7 @@ import '../../Css/LoginCss/RegistrationCard.css'
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom'
 
+
 const SignUpRightSide = () => {
 
     const { login, UserInfo } = useUserContext();
@@ -15,24 +16,30 @@ const SignUpRightSide = () => {
     const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate()
 
-    async function RegistrationSubmit(e) {
+    const RegistrationSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const res = await axios.post("http://localhost:3000/user/register", {
-                Name: name,
-                Email: email,
+                name,
+                email,
                 password,
             });
-            UserInfo(name, email, 33);
-            login();
-            setName("");
-            setEmail("");
-            setPassword("");
-            navigate('/');
+
+            if (res.data.success) {
+                UserInfo(name, email, res.data.token)
+                setName("");
+                setEmail("");
+                setPassword("");
+                localStorage.setItem("token", res.data.token);
+                login();
+                navigate("/");
+            }
+
         } catch (err) {
-            console.error("Registration failed:", err);
+            console.log("Login failed", err.response?.data);
         }
-    }
+    };
 
     const GoogleButton = () => {
         const googleLogin = useGoogleLogin({

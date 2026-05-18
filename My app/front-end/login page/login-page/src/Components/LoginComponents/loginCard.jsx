@@ -8,21 +8,36 @@ import { useNavigate } from 'react-router-dom'
 
 const SignInRightSide = () => {
 
-    const { login, UserInfo, toggle } = useUserContext();
+    const { login, UserInfo} = useUserContext();
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false);
     const [role, setRole] = useState('');
     const navigate = useNavigate();
 
-    function LoginSubmit(e) {
+    const LoginSubmit = async (e) => {
         e.preventDefault();
-        UserInfo("Ahmed", email, 33);
-        login(); 
-        setEmail("");
-        setPassword("");
-        navigate('/');
-    }
+
+        try {
+            const res = await axios.post("http://localhost:3000/user/login", {
+                email,
+                password,
+                role,
+            });
+
+            if (res.data.success) {
+                UserInfo(res.data.user.name, res.data.user.email, res.data.token);
+                setEmail("");
+                setPassword("");
+                login();
+                navigate('/');
+                localStorage.setItem("token", res.data.token);
+            }
+
+        } catch (err) {
+            console.log("Login failed", err.response?.data);
+        }
+    };
 
     return (
         <div className='signInRightSide'>

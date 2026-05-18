@@ -44,3 +44,4 @@ const RegistrationSubmit = async (e) => {
         console.log("Login failed", err.response?.data);
     }
 };
+
