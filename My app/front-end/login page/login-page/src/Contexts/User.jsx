@@ -19,8 +19,6 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
-  const logout = () => setIsAuthenticated(false);
-
   const logout = () => {
     setIsAuthenticated(false);
     setCurrentUser({});
@@ -28,8 +26,6 @@ export const UserProvider = ({ children }) => {
   }
 
   const login = () => setIsAuthenticated(true);
-  const logout = () => setIsAuthenticated(false);
-
   const toggle = () => setIsNew(!isNew);
 
   const UserInfo = (name, email, token) => {
