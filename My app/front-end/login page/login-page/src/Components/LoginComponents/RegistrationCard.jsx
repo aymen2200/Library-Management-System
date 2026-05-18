@@ -26,15 +26,12 @@ const SignUpRightSide = () => {
                 password,
             });
 
-            if (res.data.success) {
-                UserInfo(name, email, res.data.token)
-                setName("");
-                setEmail("");
-                setPassword("");
-                localStorage.setItem("token", res.data.token);
-                login();
-                navigate("/");
-            }
+            if (res.status === 201) {
+    setName("");
+    setEmail("");
+    setPassword("");
+    navigate("/auth"); // redirect to login page
+}
 
         } catch (err) {
             console.log("Login failed", err.response?.data);

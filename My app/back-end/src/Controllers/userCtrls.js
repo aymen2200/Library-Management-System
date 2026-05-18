@@ -10,17 +10,17 @@ const bcrypt= require('bcrypt');
 //1. getting the user information:
 
 const register = async (req, res) => {
-    const { Name, Email, password, phone, cardNumber } = req.body;
-    if (!Name || !Email || !password)
+    const { name, email, password, } = req.body;
+    if (!name || !email || !password)
         return res.status(400).json({ error: 'User name and password are required!' });
     try {
-        const [users] = await db.query('SELECT * FROM users WHERE Email = ?', [Email]);
+        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
         if (users.length > 0)
             return res.status(400).json({ error: 'You are already registered!' });
         const hashedPassword = await bcrypt.hash(password, 10);
         await db.query(
-            'INSERT INTO users (Name, Email, PasswordHash, Phone, LibraryCardNumber) VALUES (?,?,?,?,?)',
-            [Name, Email, hashedPassword, phone || null, cardNumber || null]
+            'INSERT INTO users (Name, Email, PasswordHash) VALUES (?,?,?)',
+            [name, email, hashedPassword]
         );
         res.status(201).json({ message: 'Registration successful!' });
     } catch (err) {
@@ -32,13 +32,13 @@ const register = async (req, res) => {
 // user login
 
 const login = async (req, res)=>{
-    const {Email, password}= req.body;
-    if (!password || !Email){
-        return res.status(400).json({error:"the Email and the password are required!"});
+    const {email, password}= req.body;
+    if (!password || !email){
+        return res.status(400).json({error:"the email and the password are required!"});
     }
-    
+    try{
     // Finding the user (the email owner)
-    const [user] = await db.query('SELECT * FROM users WHERE Email = ?', [Email]);
+    const [user] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
 
     if (user.length === 0){
     return res.status(401).json({error: "User not found"});
@@ -51,11 +51,15 @@ const login = async (req, res)=>{
     }
     
     const token = jwt.sign(
-        {name: user[0].Name, id: user[0].UserID, role: 1},
-        process.env.JWT_SECRET || 'tempsecret',
-        {expiresIn: '8h'},
-    );
-    res.json({message: "Login successful", id: user[0].UserID, token});
+    { name: user[0].name, id: user[0].UserID, role: user[0].Role }, 
+    process.env.JWT_SECRET || 'tempsecret',
+    { expiresIn: '8h' }
+);
+res.json({ message: "Login successful", id: user[0].UserID, name: user[0].name, token })}
+ catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Server error" });
+}
 }
 
 // Getting all users:

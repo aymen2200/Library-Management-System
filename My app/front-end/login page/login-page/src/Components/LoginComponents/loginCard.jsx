@@ -24,15 +24,15 @@ const SignInRightSide = () => {
                 password,
                 role,
             });
-
-            if (res.data.success) {
-                UserInfo(res.data.user.name, res.data.user.email, res.data.token);
-                setEmail("");
-                setPassword("");
-                login();
-                localStorage.setItem("token", res.data.token);
-                navigate('/');
-            }
+             if (res.data.token) {
+            localStorage.setItem("token", res.data.token);
+            UserInfo(res.data.name, email, res.data.token);
+            setEmail("");
+            setPassword("");
+            login();
+            navigate('/');
+        }
+            
 
         } catch (err) {
             console.log("Login failed", err.response?.data);
