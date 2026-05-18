@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
 const UserContext = createContext();
@@ -7,7 +7,7 @@ export const useUserContext = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isNew, setIsNew] = useState();
+  const [isNew, setIsNew] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
 
   useEffect(() => {
@@ -18,6 +18,14 @@ export const UserProvider = ({ children }) => {
       setIsAuthenticated(true);
     }
   }, []);
+
+  const logout = () => setIsAuthenticated(false);
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setCurrentUser({});
+    localStorage.removeItem("token");
+  }
 
   const login = () => setIsAuthenticated(true);
   const logout = () => setIsAuthenticated(false);

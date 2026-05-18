@@ -30,8 +30,8 @@ const SignInRightSide = () => {
                 setEmail("");
                 setPassword("");
                 login();
-                navigate('/');
                 localStorage.setItem("token", res.data.token);
+                navigate('/');
             }
 
         } catch (err) {
