@@ -50,7 +50,7 @@ const NavBar = () => {
                 <Link to='' className="nav-links">Favorites</Link>
                 <Link to='' className="nav-links">My Reading Journey</Link>
             </div>
-            <div className="left-side">
+            <div className="right-side">
                 {isAuthenticated? 
                     <Link to='' className="right-side">
                         <Profile_Card name={currentUser.name}/>

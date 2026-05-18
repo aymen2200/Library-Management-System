@@ -7,7 +7,6 @@ import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom'
 
 
-
 const SignUpRightSide = () => {
 
     const { login, UserInfo } = useUserContext();
@@ -17,26 +16,33 @@ const SignUpRightSide = () => {
     const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate()
 
-    function RegistrationSubmit(e) {
+    const RegistrationSubmit = async (e) => {
         e.preventDefault();
-        UserInfo(name, email, 33);
-        login(); 
-        setName("");
-        setEmail("");
-        setPassword("");
-        navigate('/');
-    }
 
-<<<<<<< HEAD
         try {
             const res = await axios.post("http://localhost:3000/user/register", {
-                Name,
-                Email,
+                name,
+                email,
                 password,
             });
-=======
+
+            if (res.data.success) {
+                UserInfo(name, email, res.data.token)
+                setName("");
+                setEmail("");
+                setPassword("");
+                localStorage.setItem("token", res.data.token);
+                login();
+                navigate("/");
+            }
+
+        } catch (err) {
+            console.log("Login failed", err.response?.data);
+        }
+    };
+
     const GoogleButton = () => {
-        const login = useGoogleLogin({
+        const googleLogin = useGoogleLogin({
             onSuccess: (credentialResponse) => {
                 console.log(credentialResponse);
             },
@@ -44,10 +50,9 @@ const SignUpRightSide = () => {
                 console.log('Login Failed');
             },
         });
->>>>>>> fc9beec5f99a155cfdcd715783acace1f62633b5
 
         return (
-            <button className="google-btn" onClick={() => login()}>
+            <button className="google-btn" onClick={() => googleLogin()}>
                 <img
                     src="https://developers.google.com/identity/images/g-logo.png"
                     alt="Google"
@@ -64,7 +69,7 @@ const SignUpRightSide = () => {
             <form onSubmit={RegistrationSubmit}>
                 <p className='sec-paragraph'>Name</p>
                 <input onChange={(e) => setName(e.target.value)} type="text" value={name} placeholder='Enter your Name' />
-                <p className='sec-paragraph'>Email Adress</p>
+                <p className='sec-paragraph'>Email Address</p>
                 <input onChange={(e) => setEmail(e.target.value)} type="email" value={email} placeholder='Enter your Email' />
                 <p className='sec-paragraph'>Password</p>
                 <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password} placeholder='Enter your Password' />
