@@ -27,11 +27,11 @@ const SignUpRightSide = () => {
             });
 
             if (res.status === 201) {
-    setName("");
-    setEmail("");
-    setPassword("");
-    navigate("/auth"); // redirect to login page
-}
+                setName("");
+                setEmail("");
+                setPassword("");
+                navigate("/auth"); // redirect to login page
+            }
 
         } catch (err) {
             console.log("Login failed", err.response?.data);
