@@ -1,0 +1,204 @@
+.Registration-Card {
+    display: flex;
+    height: 600px;
+    width: 980px;
+    background-color: #F8EFE2;
+    border-radius: 15px;
+    box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.signUpLeftSide {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 30px;
+    width: 40%;
+    background-image: url(../../images/LoginPage-images/side-loginPage-img.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -150px;
+    margin-bottom: 0px;
+}
+
+.logo img {
+    width: 50px;
+    height: auto;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.signUpLeftSide .logo h3 {
+    color: #58151C;
+    display: flex;
+    font-weight: 600;
+    font-size: 1.1em;
+    margin: 10px 0 0 0;
+}
+
+.signUpLeftSide .logo p {
+    color: #58151C;
+    display: flex;
+    font-size: 0.7em;
+    margin-top: 8px;
+    width: 100%;
+}
+
+.signUpLeftSide h1 {
+    color: #58151C;
+    margin: 30px 0 0 0;
+}
+
+.signUpLeftSide p {
+    font-size: 0.9em;
+    font-weight: 600;
+    text-align: center;
+    color: black;
+    letter-spacing: 1px;
+    width: 250px;
+}
+
+.signUpLeftSide button {
+    color: white;
+    padding: 15px 40px;
+    font-weight: 600;
+    font-size: 1.18em;
+    border: 2px solid white;
+    border-radius: 35px;
+    cursor: pointer;
+    margin-bottom: -130px;
+    margin-top: 200px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: 0.5s ease;
+    position: relative;
+    z-index: 1000;
+}
+
+.signUpLeftSide button:hover {
+    background-color: transparent;
+}
+
+.signUpRightSide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #F8EFE2;
+    width: 60%;
+}
+
+.signUpRightSide h1 {
+    margin-bottom: 0;
+    text-align: center;
+    color: #58151C;
+}
+
+.main-paragraph1 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #7E756D;
+}
+
+.signUpRightSide form {
+    margin-top: 10px;
+    width: 100%;
+    padding-left: 125px;
+}
+
+.sec-paragraph {
+    margin: 20px 0 8px 3px;
+    color: #7E756D;
+}
+
+.signUpRightSide input {
+    margin: 0;
+    height: 40px;
+    width: 430px;
+    background-color: #FCF6EE;
+    padding-left: 5px;
+    border: rgb(224, 220, 220) 1.5px solid;
+    border-radius: 10px;
+    color:#3d3d3d;;
+    font-weight: 500;
+    font-size: 1.01em;
+}
+
+.signUpRightSide input:focus {
+    background-color: white;
+    outline: none;
+}
+
+.signUpRightSide button {
+    width: 440px;
+    height: 40px;
+    margin-top: 30px;
+    transition: 0.5s ease;
+    background-color: #58151C;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: 500;
+    font-size: 1.18em;
+}
+
+.signUpRightSide button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 430px;
+    margin: 20px 5px 20px 5px;
+    color: rgb(158, 158, 158);
+    font-size: 1.3em;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.signUpRightSide .google-btn {
+    margin-top: 0px;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 350px;
+    background-color: #FCF6EE;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 440px;
+}
+
+.google-btn:hover {
+    background-color: #ffffff;
+}
+
+.google-btn img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}

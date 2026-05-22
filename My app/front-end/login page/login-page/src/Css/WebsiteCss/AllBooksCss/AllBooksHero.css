@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+
+.allbooks-hero {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  margin-top: 50px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  font-family: 'Lato', sans-serif;
+  background-image: url("../../../images/Website-images/All-Books-img.png");
+  background-size: cover;
+  background-position: center;
+  animation: abSlowZoom 3s ease-out forwards;
+}
+
+@keyframes abSlowZoom {
+  from { transform: scale(1.05); }
+  to   { transform: scale(1.0); }
+}
+
+.allbooks-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(60, 10, 10, 0.88) 0%,
+    rgba(60, 10, 10, 0.70) 40%,
+    rgba(60, 10, 10, 0.20) 75%,
+    transparent 100%
+  );
+}
+
+.allbooks-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 80px;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.allbooks-hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.2rem;
+  font-weight: 400;
+  color: #f5ede0;
+  line-height: 1.2;
+  margin: 0;
+  opacity: 0;
+  animation: abFadeSlideUp 0.9s ease 0.2s forwards;
+}
+
+.allbooks-hero-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: #d4a96a;
+  margin-top: 18px;
+}
+
+.allbooks-hero-description {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: #e8d8c4;
+  line-height: 1.8;
+  margin: 0;
+  opacity: 0;
+  animation: abFadeSlideUp 0.9s ease 0.4s forwards;
+}
+
+@keyframes abFadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .allbooks-hero {
+    height: auto;
+    min-height: 360px;
+    padding: 60px 0;
+  }
+
+  .allbooks-hero-content {
+    padding: 0 28px;
+  }
+
+  .allbooks-hero-title {
+    font-size: 2rem;
+  }
+}

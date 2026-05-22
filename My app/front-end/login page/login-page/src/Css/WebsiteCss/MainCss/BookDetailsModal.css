@@ -1,0 +1,71 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.modal-content {
+  background: #fdf6ec;
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  gap: 28px;
+  max-width: 750px;        /* wider */
+  width: 90%;
+  position: relative;
+  max-height: 85vh;
+  overflow-y: auto;        /* only one scroll here */
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #7a1c2e;
+}
+
+.modal-cover {
+  width: 150px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;        /* prevents info from breaking layout */
+}
+
+.modal-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2c2c2a;
+  margin: 0;
+}
+
+.modal-author {
+  font-size: 0.95rem;
+  color: #7a1c2e;
+  font-weight: 600;
+  margin: 0;
+}
+
+.modal-description {
+  font-size: 0.875rem;
+  color: #555;
+  line-height: 1.8;
+  margin: 0;
+  overflow-y: visible;     /* removed second scroll — let modal-content handle it */
+}
