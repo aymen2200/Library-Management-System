@@ -28,8 +28,8 @@ export default function Footer() {
           <h3 className="footer-right-side-title">Some Quick Links</h3>
           <Link to="/" className="Footer-Links">Home</Link>
           <Link to="/AllBooks" className="Footer-Links">All Books</Link>
-          <Link to="" className="Footer-Links">Favorites</Link>
-          <Link to="" className="Footer-Links">My Reading Journey</Link>
+          <Link to="/Favorites" className="Footer-Links">Favorites</Link>
+          <Link to="/MyReadingJourney" className="Footer-Links">My Reading Journey</Link>
           <Link to="" className="Footer-Links">Terms and Conditions</Link>
         </div>
       </div>

@@ -6,7 +6,11 @@ import Footer from "./Components/WebsiteComponents/Footer";
 import Login from "./Pages/loginPage";
 import MainPage from "./Pages/Main";
 import AllBooksPage from "./Pages/AllBooksPage";
+import FavoritesPage from "./Pages/FavoritesPage"
+import MyReadingJourney from "./Pages/MyReadingJourney";
 import "./App.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AppContent = () => {
   const location = useLocation();
@@ -15,26 +19,29 @@ const AppContent = () => {
 
   return (
     <>
-      {!hideNavbar && ( <Navbar /> )}
+      {!hideNavbar && (<Navbar />)}
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/auth" element={<Login />} />
-        <Route path="/AllBooks" element={<AllBooksPage/>} />
+        <Route path="/AllBooks" element={<AllBooksPage />} />
+        <Route path="/Favorites" element={<FavoritesPage />} />
+        <Route path="/MyReadingJourney" element={<MyReadingJourney />} />
       </Routes>
-      {!hideFooter && ( <Footer /> )}
+      {!hideFooter && (<Footer />)}
     </>
   );
 };
 
 function MyApp() {
   return (
-    <UserProvider>
-      <BookProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <UserProvider>
+        <BookProvider>
+          <ToastContainer position="top-right" autoClose={3000} />
           <AppContent />
-        </BrowserRouter>
-      </BookProvider>
-    </UserProvider>
+        </BookProvider>
+      </UserProvider>
+    </BrowserRouter>
   );
 }
 
