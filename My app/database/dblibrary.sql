@@ -90,7 +90,7 @@ CREATE TABLE BorrowingRecords (
   BorrowingDate      DATE      NOT NULL DEFAULT (CURRENT_DATE),
   DueDate            DATE      NOT NULL,
   ActualReturnDate   DATE,
-  Status ENUM('borrowed', 'returned', 'overdue', 'lost') NOT NULL DEFAULT 'borrowed'
+  Status ENUM('borrowed', 'returned', 'overdue', 'lost') NOT NULL DEFAULT 'borrowed',
   CreatedAt          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (BorrowingRecordID),
   CONSTRAINT fk_br_user FOREIGN KEY (UserID) REFERENCES Users(UserID)         ON DELETE RESTRICT,
