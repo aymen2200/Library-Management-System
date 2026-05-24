@@ -7,7 +7,8 @@ import { FormField, Input, Select } from "../components/FormField";
 import { icons } from "../utils";
 import "./Books.css";
 
-const API = "http://localhost:5000/api/books";
+// ✅ FIX 1: Correct port (3000) and no /api prefix
+const API = "http://localhost:3000/books";
 
 const GENRES = [
   "Fiction", "Non-Fiction", "Sci-Fi", "Dystopian",
@@ -21,21 +22,22 @@ const emptyForm = {
   isbn: "",
   url: "",
   copies: 1,
-  year: ""
+  year: "",
+  image: "", // ✅ FIX 2: Added image field (required by backend)
 };
 
 // Normalize backend field names to frontend field names
 const normalizeBook = (b) => ({
-  id:      b.BookID        ?? b.id,
-  title:   b.Title         ?? b.title,
-  author:  b.Authors       ?? b.author ?? "",   // GROUP_CONCAT alias from backend
-  genre:   b.Genre         ?? b.genre,
-  isbn:    b.ISBN          ?? b.isbn,
-  url:     b.URL           ?? b.url ?? "",
-  year:    b.PublicationDate
+  id:        b.BookID          ?? b.id,
+  title:     b.Title           ?? b.title,
+  author:    b.Authors         ?? b.author ?? "",
+  genre:     b.Genre           ?? b.genre,
+  isbn:      b.ISBN            ?? b.isbn,
+  url:       b.AdditionalDetails ?? b.url ?? "",
+  year:      b.PublicationDate
     ? new Date(b.PublicationDate).getFullYear()
     : (b.year ?? ""),
-  copies:    b.TotalCopies    ?? b.copies    ?? 0,
+  copies:    b.TotalCopies     ?? b.copies    ?? 0,
   available: b.AvailableCopies ?? b.available ?? 0,
 });
 
@@ -80,7 +82,8 @@ const Books = ({ books = [], setBooks }) => {
       isbn:   b.isbn   || "",
       url:    b.url    || "",
       copies: b.copies || 1,
-      year:   b.year   || ""
+      year:   b.year   || "",
+      image:  b.image  || "",
     });
     setError(null);
     setShowModal(true);
@@ -90,29 +93,29 @@ const Books = ({ books = [], setBooks }) => {
   const save = async () => {
     if (!form.title.trim() || !form.author.trim()) return;
 
-    const copies = Number(form.copies) || 0;
-    const year   = Number(form.year)   || "";
+    const year = Number(form.year) || "";
 
-    // Map frontend form fields to backend expected field names
+    // ✅ FIX 3: All required backend fields included, including Image
     const payload = {
-      Title:           form.title,
-      AuthorName:      form.author,
-      Genre:           form.genre,
-      ISBN:            form.isbn,
-      PublicationDate: year ? `${year}-01-01` : null,
+      Title:             form.title,
+      AuthorName:        form.author,
+      Genre:             form.genre,
+      ISBN:              form.isbn,
+      PublicationDate:   year ? `${year}-01-01` : null,
       AdditionalDetails: form.url || null,
-      Barcode:         form.isbn || `BC-${Date.now()}`, // fallback barcode
+      Image:             form.image || "https://via.placeholder.com/150",
+      Barcode:           form.isbn || `BC-${Date.now()}`,
     };
 
     setError(null);
     try {
       if (editing) {
-        // UPDATE — backend uses COALESCE so only send changed fields
+        // UPDATE
         await axios.put(`${API}/${editing}`, {
-          Title:           form.title,
-          Genre:           form.genre,
-          ISBN:            form.isbn,
-          PublicationDate: year ? `${year}-01-01` : null,
+          Title:             form.title,
+          Genre:             form.genre,
+          ISBN:              form.isbn,
+          PublicationDate:   year ? `${year}-01-01` : null,
           AdditionalDetails: form.url || null,
         });
         // Re-fetch to get the fresh record
@@ -122,7 +125,7 @@ const Books = ({ books = [], setBooks }) => {
       } else {
         // CREATE
         await axios.post(API, payload);
-        // Re-fetch full list to get real IDs and copy counts
+        // Re-fetch full list to get real IDs and copy counts from DB
         const res = await axios.get(API);
         setBooks(res.data.map(normalizeBook));
       }
@@ -180,9 +183,7 @@ const Books = ({ books = [], setBooks }) => {
           <tbody>
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={9} className="empty-row">
-                  No books found.
-                </td>
+                <td colSpan={9} className="empty-row">No books found.</td>
               </tr>
             )}
 
@@ -210,28 +211,19 @@ const Books = ({ books = [], setBooks }) => {
                   <Badge
                     label={b.available === 0 ? "None" : b.available}
                     color={
-                      b.available === 0
-                        ? "red"
-                        : b.available < b.copies
-                        ? "yellow"
-                        : "green"
+                      b.available === 0 ? "red"
+                      : b.available < b.copies ? "yellow"
+                      : "green"
                     }
                   />
                 </td>
 
                 <td>
                   <div className="action-btns">
-                    <button
-                      className="icon-btn icon-btn--blue"
-                      onClick={() => openEdit(b)}
-                    >
+                    <button className="icon-btn icon-btn--blue" onClick={() => openEdit(b)}>
                       <Icon d={icons.edit} size={15} stroke="#3b82f6" />
                     </button>
-
-                    <button
-                      className="icon-btn icon-btn--red"
-                      onClick={() => setDeleteId(b.id)}
-                    >
+                    <button className="icon-btn icon-btn--red" onClick={() => setDeleteId(b.id)}>
                       <Icon d={icons.trash} size={15} stroke="#ef4444" />
                     </button>
                   </div>
@@ -242,7 +234,7 @@ const Books = ({ books = [], setBooks }) => {
         </table>
       </div>
 
-      {/* MODAL */}
+      {/* ADD / EDIT MODAL */}
       {showModal && (
         <Modal
           title={editing ? "Edit Book" : "Add New Book"}
@@ -259,9 +251,7 @@ const Books = ({ books = [], setBooks }) => {
           <div className="form-grid-2">
             <FormField label="Genre">
               <Select value={form.genre} onChange={setField("genre")}>
-                {GENRES.map((g) => (
-                  <option key={g}>{g}</option>
-                ))}
+                {GENRES.map((g) => <option key={g}>{g}</option>)}
               </Select>
             </FormField>
 
@@ -280,35 +270,31 @@ const Books = ({ books = [], setBooks }) => {
             </FormField>
           </div>
 
-          <FormField label="URL">
+          {/* ✅ FIX 4: Added Image URL field — required by backend */}
+          <FormField label="Image URL">
+            <Input type="url" value={form.image} onChange={setField("image")} placeholder="https://..." />
+          </FormField>
+
+          <FormField label="Additional Details / URL">
             <Input type="url" value={form.url} onChange={setField("url")} />
           </FormField>
 
           {error && <p className="error-banner">{error}</p>}
 
           <div className="form-actions">
-            <button className="btn btn-cancel" onClick={() => setShowModal(false)}>
-              Cancel
-            </button>
-            <button className="btn btn-primary" onClick={save}>
-              Save Book
-            </button>
+            <button className="btn btn-cancel" onClick={() => setShowModal(false)}>Cancel</button>
+            <button className="btn btn-primary" onClick={save}>Save Book</button>
           </div>
         </Modal>
       )}
 
-      {/* DELETE */}
+      {/* DELETE CONFIRM MODAL */}
       {deleteId && (
         <Modal title="Delete Book?" onClose={() => setDeleteId(null)}>
           <p className="confirm-text">This action cannot be undone.</p>
-
           <div className="form-actions">
-            <button className="btn btn-cancel" onClick={() => setDeleteId(null)}>
-              Cancel
-            </button>
-            <button className="btn btn-danger" onClick={() => confirmDelete(deleteId)}>
-              Delete
-            </button>
+            <button className="btn btn-cancel" onClick={() => setDeleteId(null)}>Cancel</button>
+            <button className="btn btn-danger" onClick={() => confirmDelete(deleteId)}>Delete</button>
           </div>
         </Modal>
       )}

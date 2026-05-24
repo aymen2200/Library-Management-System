@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Icon from "../../../../../../../lib/src/components/Icon";
-import Badge from "../../../../../../../lib/src/components/Badge";
-import Modal from "../../../../../../../lib/src/components/Modal";
-import { FormField, Input, Select } from "../../../../../../../lib/src/components/FormField";
-import { icons } from "../../../../../../../lib/src/utils";
+// ✅ FIX 1: Corrected broken import paths
+import Icon from "../components/Icon";
+import Badge from "../components/Badge";
+import Modal from "../components/Modal";
+import { FormField, Input, Select } from "../components/FormField";
+import { icons } from "../utils";
 import "./Users.css";
 
-const API = axios.create({ baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:3000" });
+// ✅ FIX 2: Correct base URL — port 3000, no /api prefix
+const API = axios.create({ baseURL: "http://localhost:3000" });
 
 // Attach JWT token from localStorage to every request
 API.interceptors.request.use((config) => {
@@ -28,7 +30,6 @@ const Users = ({ borrowings }) => {
   const [loading,   setLoading]   = useState(false);
   const [error,     setError]     = useState(null);
 
-  // ── Fetch all users on mount ──────────────────────────────────────────────
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -37,8 +38,8 @@ const Users = ({ borrowings }) => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await API.get("/users");
-      // Normalize backend field names (UserID → id, Name → name, etc.)
+      // ✅ FIX 3: Correct route — GET /user/get_all_users
+      const { data } = await API.get("/user/get_all_users");
       const normalized = data.map((u) => ({
         id:          u.UserID   ?? u.id,
         name:        u.Name     ?? u.name,
@@ -63,30 +64,28 @@ const Users = ({ borrowings }) => {
     [u.name, u.email].some((s) => s.toLowerCase().includes(search.toLowerCase()))
   );
 
-  // ── Open modals ───────────────────────────────────────────────────────────
   const openAdd = () => {
     setEditing(null);
     setForm(emptyForm);
+    setError(null);
     setShowModal(true);
   };
 
   const openEdit = (u) => {
     setEditing(u.id);
     setForm({ name: u.name, email: u.email, phone: u.phone, status: u.status });
+    setError(null);
     setShowModal(true);
   };
 
-  // ── Save (Add or Edit) ────────────────────────────────────────────────────
-  // NOTE: Your backend only exposes POST /users/register for creation.
-  // For editing, add a PATCH /users/:id route in your backend, or adjust the
-  // endpoint name below to match whatever update route you create.
   const save = async () => {
     if (!form.name || !form.email) return;
     setError(null);
     try {
       if (editing) {
-        // Update existing user — expects PATCH /users/:id on your backend
-        const { data } = await API.patch(`/users/${editing}`, form);
+        // ✅ FIX 4: Correct route — PATCH /user/:id
+        // Make sure you add this route to your backend userRoutes.js (see note below)
+        const { data } = await API.patch(`/user/${editing}`, form);
         const updated = {
           id:          data.UserID   ?? data.id   ?? editing,
           name:        data.Name     ?? data.name ?? form.name,
@@ -99,15 +98,12 @@ const Users = ({ borrowings }) => {
         };
         setUsers((us) => us.map((u) => (u.id === editing ? updated : u)));
       } else {
-        // Register a new user — POST /users/register
-        // Password is required by your backend; use a temporary default or
-        // add a password field to the form for admin-created accounts.
-        await API.post("/users/register", {
+        // ✅ FIX 5: Correct route — POST /user/register
+        await API.post("/user/register", {
           name:     form.name,
           email:    form.email,
-          password: "ChangeMe123!", // Temporary password; user should reset
+          password: "ChangeMe123!", // Temporary password — user should reset
         });
-        // Re-fetch so we get the real ID and memberSince from the DB
         await fetchUsers();
       }
       setShowModal(false);
@@ -116,12 +112,11 @@ const Users = ({ borrowings }) => {
     }
   };
 
-  // ── Delete ────────────────────────────────────────────────────────────────
-  // Your backend uses a soft-delete: PUT /users/:id → sets IsDeleted = 1
   const confirmDelete = async (id) => {
     setError(null);
     try {
-      await API.delete(`/users/${id}`);
+      // ✅ FIX 6: Correct route — DELETE /user/remove/:id
+      await API.delete(`/user/remove/${id}`);
       setUsers((us) => us.filter((u) => u.id !== id));
     } catch (err) {
       setError(err.response?.data?.error ?? "Delete failed.");
@@ -133,7 +128,6 @@ const Users = ({ borrowings }) => {
   const initials = (name) =>
     name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 
-  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="users-page">
       <div className="page-header">
@@ -211,7 +205,7 @@ const Users = ({ borrowings }) => {
         )}
       </div>
 
-      {/* ── Add / Edit Modal ── */}
+      {/* Add / Edit Modal */}
       {showModal && (
         <Modal
           title={editing ? "Edit User" : "Add New User"}
@@ -240,7 +234,7 @@ const Users = ({ borrowings }) => {
         </Modal>
       )}
 
-      {/* ── Delete Confirm Modal ── */}
+      {/* Delete Confirm Modal */}
       {deleteId && (
         <Modal title="Delete User?" onClose={() => setDeleteId(null)}>
           <p className="confirm-text">This action cannot be undone.</p>
