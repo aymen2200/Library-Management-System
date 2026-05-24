@@ -1,0 +1,9 @@
+.favorites-page {
+  min-height: 100vh;
+  background-color: #F8ECE0;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

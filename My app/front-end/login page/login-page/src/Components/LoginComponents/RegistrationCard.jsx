@@ -30,7 +30,7 @@ const SignUpRightSide = () => {
                 setName("");
                 setEmail("");
                 setPassword("");
-                navigate("/auth"); // redirect to login page
+                navigate("/");
             }
 
         } catch (err) {

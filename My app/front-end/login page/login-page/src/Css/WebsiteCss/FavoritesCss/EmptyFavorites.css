@@ -1,0 +1,62 @@
+.empty-favorites-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 12px;
+  background-color: #FDF9F2;
+  border-radius: 16px;
+  width: 480px;
+  height: 200px;
+  box-shadow: 0 4px 16px rgba(100, 40, 20, 0.12);
+  animation: FavfadeSlideUp 0.9s ease;
+}
+
+@keyframes FavfadeSlideUp {
+  from { opacity: 0 ; transform: translateY(24px); }
+  to   { opacity: 1 ; transform: translateY(0);}
+}
+
+.empty-favorites-heart {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.empty-favorites-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #55151C;
+  font-family: 'Georgia', serif;
+  margin: 0;
+}
+
+.empty-favorites-subtitle {
+  font-size: 15px;
+  color: #7a5c4f;
+  font-family: 'Georgia', serif;
+  text-align: center;
+}
+
+.empty-favorites-browse-btn {
+  margin-top: 16px;
+  background-color: #7a1c2e;
+  color: #fff;
+  padding: 12px 32px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 15px;
+  display: block;
+  width: fit-content;
+  font-family: 'Georgia', serif;
+  transition: 0.2s ease;
+}
+
+.empty-favorites-browse-btn:hover {
+  background-color: #9b2236;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(122, 28, 46, 0.55);
+}

@@ -1,44 +1,89 @@
-import { createContext, useState, useContext, useEffect } from "react"
+import { createContext, useState, useContext, useCallback, useEffect } from "react";
+import { apiFetchFavorites, apiAddToFavorites, apiRemoveFromFavorites, apiClearFavorites } from "../APICalls/FavoritesAPICalls";
+import { toast } from "react-toastify";
+import { useUserContext } from "./User";
 
-const BookContext = createContext()
+const BookContext = createContext();
 
-export const useBookContext = () => useContext(BookContext)
+export const useBookContext = () => useContext(BookContext);
 
 export const BookProvider = ({ children }) => {
-    const [favorites, setFavorites] = useState([])
+    const [favorites, setFavorites] = useState([]);
+    const [totalItems, setTotalItems] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const { isAuthenticated } = useUserContext();
+
+
+    const loadFavorites = useCallback(async (query = "") => {
+        setIsLoading(true);
+        try {
+            const result = await apiFetchFavorites(query);
+            setFavorites(result.books);
+            setTotalItems(result.totalItems);
+        } catch (err) {
+            toast.error("Failed to load favorites.");
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
-        const storedFavs = localStorage.getItem("favorites")
+        {isAuthenticated && 
+            loadFavorites();
+        }
+    }, [loadFavorites]);
 
-        if (storedFavs) setFavorites(JSON.parse(storedFavs))
-    }, [])
+    const addToFavorites = async (book) => {
+        setFavorites((prev) => [...prev, book]);
+        setTotalItems((prev) => prev + 1);
+        try {
+            await apiAddToFavorites(book);
+        } catch (err) {
+            setFavorites((prev) => prev.filter((b) => b.id !== book.id));
+            setTotalItems((prev) => prev - 1);
+            toast.error("Failed to add to favorites.");
+        }
+    };
 
-    useEffect(() => {
-        localStorage.setItem('favorites', JSON.stringify(favorites))
-    }, [favorites])
+    const removeFromFavorites = async (bookId) => {
+        const previous = favorites;
+        setFavorites((prev) => prev.filter((b) => b.id !== bookId));
+        setTotalItems((prev) => prev - 1);
+        try {
+            await apiRemoveFromFavorites(bookId);
+        } catch (err) {
+            setFavorites(previous);
+            setTotalItems((prev) => prev + 1);
+            toast.error("Failed to remove from favorites.");
+        }
+    };
 
-    const addToFavorites = (Book) => {
-        setFavorites(prev => [...prev, Book])
-    }
+    const isFavorite = (bookId) => {
+        return favorites.some((book) => book.id === bookId);
+    };
 
-    const removeFromFavorites = (BookId) => {
-        setFavorites(prev => prev.filter(Book => Book.id !== BookId))
-    }
-
-    const isFavorite = (BookId) => {
-        return favorites.some(Book => Book.id === BookId)
-    }
+    const clearFavorites = async () => {
+        try {
+            await apiClearFavorites();
+            setFavorites([]);
+            setTotalItems(0);
+        } catch (err) {
+            toast.error("Failed to clear favorites.");
+        }
+    };
 
     const value = {
         favorites,
+        totalItems,
+        isLoading,
+        loadFavorites,
         addToFavorites,
         removeFromFavorites,
-        isFavorite
-    }
+        isFavorite,
+        clearFavorites,
+    };
 
-    return<BookContext.Provider value={value}>
-        {children}
-    </BookContext.Provider>
-}
+    return <BookContext.Provider value={value}>{children}</BookContext.Provider>;
+};
 
 export default BookProvider;

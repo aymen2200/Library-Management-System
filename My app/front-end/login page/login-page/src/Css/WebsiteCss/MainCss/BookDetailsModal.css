@@ -14,11 +14,11 @@
   padding: 32px;
   display: flex;
   gap: 28px;
-  max-width: 750px;        /* wider */
+  max-width: 750px;        
   width: 90%;
   position: relative;
   max-height: 85vh;
-  overflow-y: auto;        /* only one scroll here */
+  overflow-y: auto;        
 }
 
 .modal-close {
@@ -45,7 +45,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow: hidden;        /* prevents info from breaking layout */
+  overflow: hidden;        
 }
 
 .modal-title {
@@ -67,5 +67,5 @@
   color: #555;
   line-height: 1.8;
   margin: 0;
-  overflow-y: visible;     /* removed second scroll — let modal-content handle it */
+  overflow-y: visible;     
 }

@@ -1,0 +1,66 @@
+.favorites-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 48px 80px 0 80px;
+  background-color: #f5ede3;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 60px;
+}
+
+.favorites-hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 75%;
+}
+
+.favorites-hero-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #3b1a10;
+  margin: 0;
+  font-family: 'Georgia', serif;
+}
+
+.favorites-hero-heart {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.favorites-hero-subtitle {
+  font-size: 15px;
+  color: #9e7b6b;
+  margin: 0;
+  font-family: 'Georgia', serif;
+}
+
+.favorites-hero-divider {
+  width: 90%;
+  height: 1px;
+  background-color: #d6bfaf;
+  margin: 16px 0 8px 0;
+}
+
+.favorites-hero-count {
+  font-size: 15px;
+  color: #3b1a10;
+  margin: 0;
+  font-family: 'Georgia', serif;
+}
+
+.favorites-hero-count strong {
+  font-weight: bold;
+}
+
+.favorites-hero-image {
+  width: 300px;
+  object-fit: contain;
+  flex-shrink: 0;
+}

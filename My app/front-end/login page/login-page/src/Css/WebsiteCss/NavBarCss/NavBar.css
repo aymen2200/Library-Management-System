@@ -56,7 +56,7 @@ nav , .navbar {
     color: #DDB7A7;
     text-decoration: none;
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 6px 6px 0 0;
     cursor: pointer;
     transition: background-color 0.2s;
     position: relative;
@@ -96,9 +96,13 @@ nav , .navbar {
 }
 
 .nav-links ul li:hover {
-    background-color: rgba(221, 183, 167, 0.15);
+    background-color: #692D31;
 }
 
+.nav-links.active {
+    background-color: #692D31;
+    border-bottom: 2px solid #D4A96A;
+}
 
 .right-side {
     display: flex;
@@ -115,6 +119,9 @@ nav , .navbar {
 }
 
 .sign-up-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: #55151C;
     background-color: #DDB7A7;
     padding: 7px 18px;
@@ -129,6 +136,9 @@ nav , .navbar {
 }
 
 .sign-in-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: #DDB7A7;
     background-color: transparent;
     border: 1.5px solid #DDB7A7;

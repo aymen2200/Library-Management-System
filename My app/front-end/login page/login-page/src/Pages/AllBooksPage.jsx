@@ -15,29 +15,27 @@ const AllBooksPage = () => {
   const [page, setPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
-  const skipFetch = useRef(false); // ← declared here
-
+  const skipFetch = useRef(false); 
   const location = useLocation();
 
-useEffect(() => {
-  setQuery("default");
-  setPage(1);
-}, [location.key]);
+  useEffect(() => {
+    setQuery("default");
+    setPage(1);
+  }, [location.key]);
 
   useEffect(() => {
-    console.log("useEffect fired", query, page); // ← here
     if (skipFetch.current) {
       skipFetch.current = false;
       return;
     }
     const fetchBooks = async () => {
-      console.log("fetchBooks called"); // ← here
+      console.log("fetchBooks called"); 
       setLoading(true);
       try {
         const result = query === "default"
           ? await getAllBooks(page, LIMIT)
           : await searchBooks(query, page, LIMIT);
-        console.log("result:", result); // ← and here
+        console.log("result:", result); 
         setBooks(result.books);
         setTotalItems(result.totalItems);
       } catch (err) {
@@ -48,7 +46,7 @@ useEffect(() => {
     fetchBooks();
   }, [query, page]);
 
-  const totalPages = Math.min(Math.ceil(totalItems / LIMIT), 50);
+  const totalPages = Math.min(Math.ceil(totalItems / LIMIT), 10);
 
   const handleSearch = (results, searchQuery, total) => {
     if (searchQuery === "default") {
@@ -67,6 +65,7 @@ useEffect(() => {
     <div className="allbooks-page">
       <AllBooksHero />
       <SearchBar onResults={handleSearch} />
+      <h1 className="All-Books-Title">Our Book Collection</h1>
       {loading ? (
         <div className="books-loading">
           {Array.from({ length: 8 }).map((_, i) => (

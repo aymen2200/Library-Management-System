@@ -5,13 +5,22 @@ const getAllBooks = async (req, res) => {
   const { title, author, genre } = req.query;
 
   try {
-    // FIX 2: GROUP BY was baked into the base query string, so any appended AND filters
-    // ended up after GROUP BY, which is invalid SQL. Now GROUP BY is appended last.
-    let query = `SELECT books.*, GROUP_CONCAT(authors.fullname SEPARATOR ', ') AS Authors
-FROM books
-INNER JOIN bookauthors ON books.bookid = bookauthors.bookid
-INNER JOIN authors ON authors.authorid = bookauthors.authorid
-WHERE books.IsDeleted = FALSE`;
+    let query = `
+      SELECT 
+        books.*,
+        GROUP_CONCAT(DISTINCT authors.fullname ORDER BY authors.fullname SEPARATOR ', ') AS Authors,
+        COUNT(DISTINCT copies.CopyID) AS TotalCopies,
+        COUNT(DISTINCT CASE WHEN copies.AvailabilityStatus = 'available' THEN copies.CopyID END) AS AvailableCopies,
+        CASE 
+          WHEN COUNT(DISTINCT CASE WHEN copies.AvailabilityStatus = 'available' THEN copies.CopyID END) > 0 
+          THEN 'available'
+          ELSE 'unavailable'
+        END AS Status
+      FROM books
+      INNER JOIN bookauthors ON books.bookid = bookauthors.bookid
+      INNER JOIN authors ON authors.authorid = bookauthors.authorid
+      LEFT JOIN bookcopies AS copies ON books.bookid = copies.bookid
+      WHERE books.IsDeleted = FALSE`;
 
     const params = [];
 
@@ -28,13 +37,12 @@ WHERE books.IsDeleted = FALSE`;
       params.push(`%${genre}%`);
     }
 
-    query += ` GROUP BY books.bookid`; // always appended last, after all WHERE filters
+    query += ` GROUP BY books.bookid`;
 
     const [rows] = await db.execute(query, params);
 
     if (rows.length === 0) {
-      res.status(404).json({ message: "No result" });
-      return;
+      return res.status(404).json({ message: "No result" });
     }
     res.status(200).json(rows);
   } catch (error) {
@@ -123,36 +131,48 @@ const createBook = async (req, res) => {
     PublicationDate,
     Genre,
     AdditionalDetails,
+    Image,
     AuthorName,
     Barcode,
   } = req.body;
 
-  if (!Title || !ISBN || !PublicationDate || !Genre || !AuthorName) {
+  if (!Title || !ISBN || !PublicationDate || !Genre || !Image || !AuthorName) {
     return res.status(400).json({
       message:
-        "Title, ISBN, Publication Date, Genre, Barcode and Author Name are required.",
+        "Title, ISBN, Publication Date, Genre, Image, Barcode and Author Name are required.",
     });
   }
 
   const connection = await db.getConnection();
   try {
-    const [existing] = await connection.execute(
-      `SELECT BookID FROM books WHERE ISBN = ?`,
-      [ISBN],
-    );
-    if (existing.length > 0) {
-      return res
-        .status(409)
-        .json({ message: "A book with the same ISBN already exists." });
-    }
+   const [existing] = await connection.execute(
+  `SELECT BookID, IsDeleted FROM books WHERE ISBN = ?`,
+  [ISBN],
+);
+
+if (existing.length > 0) {
+  // Book exists but deleted
+  if (existing[0].IsDeleted) {
+    return res.status(409).json({
+      message:
+        "A deleted book with this ISBN already exists. Restore it instead.",
+      deletedBookId: existing[0].BookID,
+    });
+  }
+
+  // Active book exists
+  return res.status(409).json({
+    message: "A book with the same ISBN already exists.",
+  });
+}
 
     await connection.beginTransaction();
 
     const [result] = await connection.execute(
       `INSERT INTO Books 
-            (Title, ISBN, PublicationDate, Genre, AdditionalDetails, CreatedAt, IsDeleted)
-             VALUES (?,?,?,?,?,NOW(),0)`,
-      [Title, ISBN, PublicationDate, Genre, AdditionalDetails || null],
+            (Title, ISBN, PublicationDate, Genre, AdditionalDetails, Image, CreatedAt, IsDeleted)
+             VALUES (?,?,?,?,?,?,NOW(),0)`,
+      [Title, ISBN, PublicationDate, Genre, AdditionalDetails || null, Image],
     );
 
     const newBookID = result.insertId;
@@ -282,6 +302,27 @@ const deleteBook = async (req, res) => {
     res.status(500).json({ message: "Database error" });
   }
 };
+
+//restore book (to restore a deleted book)
+const restoreBook = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [result] = await db.execute(
+      `UPDATE books SET IsDeleted = FALSE WHERE BookID = ? AND IsDeleted = TRUE`,
+      [id],
+    );
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ message: "Book not found or already available" });
+    }
+    res.status(200).json({ message: "Book restored successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Database error" });
+  }
+};
+
 
 //borrowing a book
 const borrowBook = async (req, res) => {

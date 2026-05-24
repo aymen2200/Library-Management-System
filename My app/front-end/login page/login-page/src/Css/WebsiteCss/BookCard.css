@@ -11,12 +11,13 @@
   gap: 30px;
   transition: 0.22s ease;
   height: 160px;
-  animation: fadeSlideUp 0.9s ease;
+  animation: BCfadeSlideUp 0.9s ease both;
+  animation-fill-mode: none
 }
 
-@keyframes fadeSlideUp {
-  from { opacity: 0 }
-  to   { opacity: 1}
+@keyframes BCfadeSlideUp {
+  from { opacity: 0 ; transform: translateY(24px);}
+  to   { opacity: 1 ; transform: translateY(0);}
 }
 
 .book-card:hover {
@@ -87,7 +88,6 @@
 }
 
 .heart-btn.favorited {
-  opacity: 1;
   color: #e02020;
 }
 
@@ -143,33 +143,3 @@
 .dot-green  { background: #1a6e3a; }
 .dot-red    { background: #b03020; }
 
-.borrow-btn {
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: none;
-  font-family: 'Tajawal', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s;
-  white-space: nowrap;
-}
-
-.borrow-btn.active       { 
-  background: #7a1a1a; 
-  color: #fff; 
-}
-
-.borrow-btn.active:hover { 
-  background: #5c1010; 
-}
-
-.borrow-btn.disabled-btn { 
-  background: #e0d6cc; 
-  color: #8a7060; 
-  cursor: pointer; 
-}
-
-.borrow-btn.disabled-btn:hover { 
-  background: #d4c8bc; 
-}

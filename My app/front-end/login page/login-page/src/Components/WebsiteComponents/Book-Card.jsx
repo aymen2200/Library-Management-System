@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useBookContext } from "../../Contexts/Favorites";
+import { useUserContext } from "../../Contexts/User";
+import { toast } from "react-toastify";
 import "../../Css/WebsiteCss/BookCard.css";
-{/*import BorrowModal from "./BorrowingModal";*/ }
 import BookDetailsModal from "./BookDetailsModal";
-
 
 const BookCard = ({ book }) => {
 
@@ -13,13 +13,17 @@ const BookCard = ({ book }) => {
   const coverImg = book.volumeInfo?.imageLinks?.thumbnail;
   const available = true;
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-
   const [showModal, setShowModal] = useState(false);
 
   const { isFavorite, addToFavorites, removeFromFavorites } = useBookContext();
+  const { isAuthenticated } = useUserContext();
 
   const handleFavoriteToggle = (e) => {
     e.stopPropagation();
+    if (!isAuthenticated) {
+      toast.error("Please sign in to add books to your favorites!");
+      return;
+    }
     if (isFavorite(id)) {
       removeFromFavorites(id);
     } else {
@@ -30,7 +34,6 @@ const BookCard = ({ book }) => {
   return (
     <>
       <div className="book-card" onClick={() => setShowDetailsModal(true)}>
-
         <div className="cover-container">
           <img src={coverImg} alt={title} className="cover-img" />
           <div className="cover-overlay" />
@@ -53,13 +56,6 @@ const BookCard = ({ book }) => {
               <span className={`status-dot ${available ? "dot-green" : "dot-red"}`} />
               {available ? "Available" : "Not Available"}
             </span>
-
-            {/* <button
-            className={`borrow-btn ${available ? "active" : "disabled-btn"}`}
-            onClick={() => setShowModal(true)}
-          >
-            {available ? "Borrow Now" : "Reserve Later"}
-          </button> */}
             {showModal && <BorrowModal book={book} onClose={() => setShowModal(false)} />}
           </div>
         </div>
