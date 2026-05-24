@@ -1,106 +1,138 @@
 import React, { useState, useEffect } from "react";
 import "./categories.css";
 import { BiCategory } from "react-icons/bi";
-import { getCategories } from "./BooksAPICalls";
+
+// ✅ correct path to API
+import { getCategories, getAllBooks } from "./APICalls/BooksAPICalls";
+
+// ✅ correct path to BookCard
+import BookCard from "./Components/WebsiteComponents/BookCard";
 
 export default function Categories() {
   const [search, setSearch] = useState("");
   const [categories, setCategories] = useState([]);
+  const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // FETCH DATA
+  // 🔥 FETCH BOTH CATEGORIES + BOOKS
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await getCategories();
-        setCategories(data);
+
+        const [catsData, booksData] = await Promise.all([
+          getCategories(),       // from your API
+          getAllBooks()          // axios inside already
+        ]);
+
+        setCategories(catsData || []);
+        setBooks(booksData.books || []);
+
       } catch (err) {
-        setError("Failed to load categories.");
+        console.error(err);
+        setError("Failed to load data.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCategories();
+    fetchData();
   }, []);
 
-  // FILTER
-  const filtered = categories.filter((cat) =>
+  // 🔍 FILTER CATEGORIES
+  const filteredCategories = categories.filter((cat) =>
     cat.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  // 📚 SIMPLE BOOK FILTER (TEMP LOGIC)
+  const getBooksByCategory = (categoryName) => {
+    return books.filter((book) => {
+      const title = book.volumeInfo?.title || "";
+      const authors = book.volumeInfo?.authors?.join(" ") || "";
+
+      return (
+        title.toLowerCase().includes(categoryName.toLowerCase()) ||
+        authors.toLowerCase().includes(categoryName.toLowerCase())
+      );
+    });
+  };
+
   return (
     <div className="category-page">
-      
+
       {/* HERO */}
       <div className="category-hero">
         <div className="category-hero-left">
           <h1 className="category-hero-title">
             Categories <BiCategory />
           </h1>
+
           <p className="category-hero-subtitle">
             Explore all available book categories.
           </p>
 
-          <div className="category-hero-divider"></div>
-
           <p className="category-hero-count">
-            <strong>{filtered.length}</strong> Categories
+            <strong>{filteredCategories.length}</strong> Categories
           </p>
         </div>
       </div>
 
-      {/* MAIN SECTION */}
-      <div className="category-grid-section">
+      {/* SEARCH */}
+      <div className="category-controls">
+        <input
+          className="category-grid-search-input"
+          type="text"
+          placeholder="Search categories..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-        {/* 🔥 SEARCH + BUTTON CENTERED */}
-        <div className="category-controls">
-          <div className="category-grid-search-bar">
-            <input
-              className="category-grid-search-input"
-              type="text"
-              placeholder="Search categories..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
+        <button
+          className="category-clear-btn"
+          onClick={() => setSearch("")}
+        >
+          Clear All
+        </button>
+      </div>
 
-          <button
-            className="category-clear-btn"
-            onClick={() => setSearch("")}
-          >
-            Clear All
-          </button>
-        </div>
+      {/* STATES */}
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
 
-        {/* STATES */}
-        {loading && <p>Loading categories...</p>}
-        {error && <p>{error}</p>}
+      {/* CONTENT */}
+      {!loading && !error && (
+        <div className="categories-list">
 
-        {/* LIST */}
-        {!loading && !error && (
-          filtered.length > 0 ? (
-            <div className="categories-list">
-              {filtered.map((cat) => (
-                <div key={cat.id} className="category-row">
-                  {cat.name}
+          {filteredCategories.length > 0 ? (
+            filteredCategories.map((cat) => (
+              <div key={cat.id || cat.name} className="category-block">
+
+                {/* CATEGORY NAME */}
+                <h2 className="category-title">{cat.name}</h2>
+
+                {/* BOOKS GRID */}
+                <div className="books-grid">
+                  {getBooksByCategory(cat.name).length > 0 ? (
+                    getBooksByCategory(cat.name).map((book) => (
+                      <BookCard key={book.id} book={book} />
+                    ))
+                  ) : (
+                    <p>No books found</p>
+                  )}
                 </div>
-              ))}
-            </div>
+
+              </div>
+            ))
           ) : (
             <div className="empty-category-wrapper">
-              <h2 className="empty-category-title">
-                No categories found
-              </h2>
-              <p className="empty-category-subtitle">
-                Try searching something else.
-              </p>
+              <h2>No categories found</h2>
+              <p>Try something else.</p>
             </div>
-          )
-        )}
-      </div>
+          )}
+
+        </div>
+      )}
     </div>
   );
 }

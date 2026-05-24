@@ -1,0 +1,77 @@
+.form-field {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 5px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  background: #f8fafc;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-input:focus {
+  border-color: #55151c;
+  box-shadow: 0 0 0 3px rgba(85, 21, 28, 0.1);
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: auto;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.88; }
+
+.btn-cancel {
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  color: #724a4a;
+}
+
+.btn-primary {
+  border: none;
+  background: #55151c;
+  color: #fff;
+}
+
+.btn-danger {
+  border: none;
+  background: #ef4444;
+  color: #fff;
+}
