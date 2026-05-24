@@ -116,15 +116,15 @@ CREATE TABLE Fines (
 -- ------------------------------------------------------------
 -- Favorit  (users save copies they like)
 -- ------------------------------------------------------------
-CREATE TABLE Favorit (
+CREATE TABLE Favorites (
   FavoriteID  INT       NOT NULL AUTO_INCREMENT,
   UserID      INT       NOT NULL,
-  CopyID      INT       NOT NULL,
+  BookID      INT       NOT NULL,
   CreatedAt   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (FavoriteID),
-  UNIQUE KEY uq_fav (UserID, CopyID),
+  UNIQUE KEY uq_fav (UserID, BookID),
   CONSTRAINT fk_fav_user FOREIGN KEY (UserID) REFERENCES Users(UserID)      ON DELETE CASCADE,
-  CONSTRAINT fk_fav_copy FOREIGN KEY (CopyID) REFERENCES BookCopies(CopyID) ON DELETE CASCADE
+  CONSTRAINT fk_fav_copy FOREIGN KEY (BookID) REFERENCES Books(BookID) ON DELETE CASCADE
 );
 
 -- ------------------------------------------------------------
