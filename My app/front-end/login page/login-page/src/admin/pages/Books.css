@@ -1,0 +1,182 @@
+.books-page {}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  padding: 9px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-add:hover { opacity: 0.88; }
+
+/* Search */
+.search-wrap {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+.search-input:focus { border-color: #6366f1; }
+
+/* Table */
+.table-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead tr {
+  background: #f8fafc;
+}
+
+.data-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table tbody tr {
+  border-top: 1px solid #f1f5f9;
+}
+
+.data-table tbody tr:hover {
+  background: #f8fafc !important;
+}
+
+.data-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.row-alt { background: #fafafa; }
+
+.td-strong { font-weight: 600; color: #1e293b !important; }
+.td-muted  { color: #94a3b8 !important; font-size: 13px !important; }
+.td-center { text-align: center; }
+
+.empty-row {
+  padding: 32px !important;
+  text-align: center;
+  color: #94a3b8;
+}
+
+/* Action buttons */
+.action-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.icon-btn {
+  border: none;
+  border-radius: 7px;
+  padding: 6px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.15s;
+}
+.icon-btn:hover { opacity: 0.75; }
+
+.icon-btn--blue { background: #eff6ff; }
+.icon-btn--red  { background: #fef2f2; }
+
+/* Confirm text */
+.confirm-text {
+  color: #64748b;
+  margin: 0 0 20px;
+}
+
+/* Shared form grid (override from FormField.css) */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.88; }
+
+.btn-cancel  { border: 1.5px solid #e2e8f0; background: #fff;     color: #64748b; }
+.btn-primary { border: none;                background: #55151c;  color: #fff; }
+.btn-danger  { border: none;                background: #ef4444;  color: #fff; }
+
+/* New class for the URL links in the table */
+.book-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.book-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
