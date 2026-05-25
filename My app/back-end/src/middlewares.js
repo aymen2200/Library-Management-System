@@ -2,6 +2,7 @@
 // then the authorization of the user through req.user.role! (what you're allowed to do?)
 
 const jwt = require('jsonwebtoken');
+const Joi = require('joi');
 
 const authenticate = async (req,res,next)=>{
     //1- bringing the token:
@@ -29,6 +30,55 @@ const authorize = (req,res,next)=>{
     
     next();
 }
+const registerSchema = Joi.object({
+  name: Joi.string().min(3).required().messages({
+    'string.min': 'Name must be at least 3 characters',
+    'any.required': 'Name is required'
+  }),
+  email: Joi.string().email().required().messages({
+    'string.email': 'Valid email is required',
+    'any.required': 'Email is required'
+  }),
+  password: Joi.string().min(6).required().messages({
+    'string.min': 'Password must be at least 6 characters',
+    'any.required': 'Password is required'
+  })
+});
+
+const loginSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    'string.email': 'Valid email is required',
+    'any.required': 'Email is required'
+  }),
+  password: Joi.string().required().messages({
+    'any.required': 'Password is required'
+  })
+});
+
+const changePasswordSchema = Joi.object({
+  oldPassword: Joi.string().required().messages({
+    'any.required': 'Old password is required'
+  }),
+  newPassword: Joi.string().min(6).required().messages({
+    'string.min': 'New password must be at least 6 characters',
+    'any.required': 'New password is required'
+  })
+});
+
+const changeNameSchema = Joi.object({
+  newName: Joi.string().min(3).required().messages({
+    'string.min': 'Name must be at least 3 characters',
+    'any.required': 'New name is required'
+  })
+});
+
+
+const validate = (schema) => (req, res, next) => {
+  const { error } = schema.validate(req.body, { abortEarly: false });
+  if (error)
+    return res.status(400).json({ errors: error.details.map(e => e.message) });
+  next();
+};
 
 // Error middlewares !
 const logErr = (err, req, res, next)=>{
@@ -40,7 +90,7 @@ const handleErrCli = (err, req, res, next)=>{
     return res.status(500).json({error: err.message || "Something went wrong!"})
 } // no need for next(err) because it's the final middleware!
 
-module.exports = {authenticate, authorize, logErr, handleErrCli};
+module.exports = {authenticate, authorize, logErr, handleErrCli, validate,  registerSchema, loginSchema, changePasswordSchema, changeNameSchema};
 
 //middlware using:
 /*1- no middlware: pubic:

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAllBooks, createBook, getBook, updateBook, deleteBook, borrowBook, returnBook, getCopies, addCopy, getBorrowings, getFines, payFine, addToFavorite } = require("../controllers/controllers");
+const { getAllBooks, createBook, getBook, updateBook, deleteBook, borrowBook, returnBook, getCopies, addCopy, getBorrowings, getFines, payFine, addToFavorite, favorites, removeFav, clearFav } = require("../controllers/controllers");
 const { authenticate, authorize } = require('../middlewares');
 
 
@@ -22,6 +22,12 @@ router.post('/:id/borrow', borrowBook);
 router.get('/:id/copies', getCopies).post('/:id/copies', addCopy);
 
 router.post('/fav/addFav', authenticate, addToFavorite);
+
+router.get('/fav/getFav', authenticate, favorites)
+
+router.delete('/fav/deleteFav/:bookID',  authenticate, removeFav)
+
+router.delete('/fav/clear', authenticate, clearFav)
 
 
 module.exports = router;
