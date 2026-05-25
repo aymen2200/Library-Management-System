@@ -3,24 +3,16 @@ import { useBookContext } from "../../../Contexts/Favorites";
 import BookCard from "../Book-Card";
 import Pagination from "../Pagination";
 import "../../../Css/WebsiteCss/FavoritesCss/FavoritesGrid.css";
+import { searchBooks } from "../../../APICalls/BooksAPICalls";
 
 const BOOKS_PER_PAGE = 20;
 
 const FavoritesGrid = () => {
-  const { favorites, totalItems, isLoading, clearFavorites, loadFavorites } = useBookContext();
+  const { favorites, isLoading, clearFavorites } = useBookContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    loadFavorites();
-  }, []);
-
-  
-
-  const filteredFavorites = favorites.filter((book) =>
-    book.volumeInfo?.title?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+  const filteredFavorites = searchBooks(searchQuery, favorites);
 
   const totalPages = Math.ceil(filteredFavorites.length / BOOKS_PER_PAGE);
   const paginatedFavorites = filteredFavorites.slice(
@@ -79,7 +71,7 @@ const FavoritesGrid = () => {
       ) : (
         <div className="favorites-grid-books">
           {paginatedFavorites.map((book) => (
-            <BookCard key={book.id} book={book} />
+            <BookCard key={book.BookID} book={book} />
           ))}
         </div>
       )}
