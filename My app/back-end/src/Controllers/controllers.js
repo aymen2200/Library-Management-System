@@ -89,7 +89,8 @@ const getBorrowings = async (req, res) => {
 
 //View fines
 const getFines = async (req, res) => {
-  const { status, userID } = req.query;
+  const { status } = req.query;
+  const userID = req.user?.userID;
 
   try {
     let query = `SELECT * FROM fines WHERE 1=1`;
