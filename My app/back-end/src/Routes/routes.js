@@ -7,8 +7,7 @@ const { authenticate, authorize } = require('../middlewares');
 
 router.get('/borrowings', getBorrowings);
 
-router.get('/fines', getFines);
-
+router.get('/fines', authenticate, getFines);
 router.patch('/fines/:id/pay', payFine);
 
 // FIX 3: '/copies/:copyid/return' is placed BEFORE '/:id' for the same reason above.

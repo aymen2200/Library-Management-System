@@ -90,11 +90,23 @@ const getBorrowings = async (req, res) => {
 //View fines
 const getFines = async (req, res) => {
   const { status } = req.query;
+  const userID = req.user?.userID;
+
   try {
-    const [rows] = await db.execute(
-      `SELECT * FROM fines WHERE PaymentStatus = ?`,
-      [status],
-    );
+    let query = `SELECT * FROM fines WHERE 1=1`;
+    const params = [];
+
+    if (status) {
+      query += ` AND PaymentStatus = ?`;
+      params.push(status);
+    }
+    if (userID) {
+      query += ` AND UserID = ?`;
+      params.push(userID);
+    }
+
+    const [rows] = await db.execute(query, params);
+
     if (rows.length === 0) {
       return res.status(404).json({ message: "No result" });
     }

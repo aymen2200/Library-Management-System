@@ -7,7 +7,8 @@ import { FormField, Input, Select } from "../components/FormField";
 import { icons, today, calcDueDate, isOverdue } from "../utils";
 import "./Borrowings.css";
 
-const BASE = "http://localhost:5000/api";
+// ✅ FIX 1: Correct port (3000) and no /api prefix
+const BASE = "http://localhost:3000";
 
 // Normalize a borrowing record from the backend
 const normalizeBorrowing = (r) => ({
@@ -73,6 +74,7 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
 
     setError(null);
     try {
+      // ✅ FIX 2: Correct endpoint — POST /books/:id/borrow
       await axios.post(`${BASE}/books/${form.bookId}/borrow`, {
         userid: +form.userId,
       });
@@ -96,14 +98,15 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
     }
   };
 
-  // RETURN A BOOK — backend expects the copyId, not the borrowing record ID
+  // RETURN A BOOK
   const returnBook = async (id) => {
     const record = borrowings.find((x) => x.id === id);
     if (!record) return;
 
     setError(null);
     try {
-      await axios.put(`${BASE}/books/return/${record.copyId}`);
+      // ✅ FIX 3: Correct endpoint — PATCH /books/copies/:copyid/return (not PUT)
+      await axios.patch(`${BASE}/books/copies/${record.copyId}/return`);
 
       // Mark returned locally
       setBorrowings((bs) =>
@@ -141,7 +144,12 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
       <div className="borrow-toolbar">
         <div className="search-wrap search-wrap--flex">
           <Icon d={icons.search} size={16} stroke="#94a3b8" className="search-icon" />
-          <input className="search-input" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search borrowings…" />
+          <input
+            className="search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search borrowings…"
+          />
         </div>
         <div className="filter-group">
           {["All", "Active", "Overdue", "Returned"].map((f) => (
@@ -197,10 +205,13 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
             <Select value={form.bookId} onChange={set("bookId")}>
               <option value="">— Choose a book —</option>
               {books.filter((b) => b.available > 0).map((b) => (
-                <option key={b.id} value={b.id}>{b.title} ({b.available} available)</option>
+                <option key={b.id} value={b.id}>
+                  {b.title} ({b.available} available)
+                </option>
               ))}
             </Select>
           </FormField>
+
           <FormField label="Select User *">
             <Select value={form.userId} onChange={set("userId")}>
               <option value="">— Choose a user —</option>
@@ -209,10 +220,13 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
               ))}
             </Select>
           </FormField>
+
           <FormField label="Due Date">
             <Input type="date" value={form.dueDate} onChange={set("dueDate")} />
           </FormField>
+
           {error && <p className="error-banner">{error}</p>}
+
           <div className="form-actions">
             <button className="btn btn-cancel" onClick={() => setShowModal(false)}>Cancel</button>
             <button className="btn btn-primary" onClick={addBorrowing}>Confirm Borrowing</button>

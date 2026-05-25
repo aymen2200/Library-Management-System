@@ -7,13 +7,12 @@ import BookDetailsModal from "./BookDetailsModal";
 
 const BookCard = ({ book }) => {
 
-  const id = book.id;
-  const title = book.volumeInfo?.title;
-  const author = book.volumeInfo?.authors?.[0];
-  const coverImg = book.volumeInfo?.imageLinks?.thumbnail;
-  const available = true;
+  const id = book.BookID;
+  const title = book.Title;
+  const author = book.Authors;
+  const coverImg = `https://covers.openlibrary.org/b/isbn/${book.ISBN}-L.jpg`;
+  const available = book.Status === 'available';
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const { isFavorite, addToFavorites, removeFromFavorites } = useBookContext();
   const { isAuthenticated } = useUserContext();
@@ -56,7 +55,6 @@ const BookCard = ({ book }) => {
               <span className={`status-dot ${available ? "dot-green" : "dot-red"}`} />
               {available ? "Available" : "Not Available"}
             </span>
-            {showModal && <BorrowModal book={book} onClose={() => setShowModal(false)} />}
           </div>
         </div>
       </div>
