@@ -53,7 +53,7 @@ const login = async (req, res)=>{
     const token = jwt.sign(
     { name: user[0].name, id: user[0].UserID, role: user[0].Role }, 
     process.env.JWT_SECRET || 'tempsecret',
-    { expiresIn: '8h' }
+    { expiresIn: '72h' }
 );
 res.json({ message: "Login successful", id: user[0].UserID, name: user[0].name, token })}
  catch (err) {
@@ -109,7 +109,56 @@ const deleteUser = async (req, res) =>{
     }
 }
 
+const changePassword = async (req, res) => {
+  const userID = req.user.id;
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword)
+    return res.status(400).json({ error: "Old and new password are required!" });
+
+  try {
+    const [user] = await db.query('SELECT * FROM Users WHERE UserID = ?', [userID]);
+    if (user.length === 0)
+      return res.status(404).json({ error: "User not found" });
+
+    const isCorrect = await bcrypt.compare(oldPassword, user[0].PasswordHash);
+    if (!isCorrect)
+      return res.status(401).json({ error: "Old password is incorrect" });
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await db.query(
+      'UPDATE Users SET PasswordHash = ? WHERE UserID = ?',
+      [hashedPassword, userID]
+    );
+
+    res.status(200).json({ message: "Password changed successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const changeName = async (req, res) => {
+  const userID = req.user.id;
+  const { newName } = req.body;
+
+  if (!newName)
+    return res.status(400).json({ error: "New name is required!" });
+
+  try {
+    const [rows] = await db.query(
+      'UPDATE Users SET Name = ? WHERE UserID = ?',
+      [newName, userID]
+    );
+    if (rows.affectedRows === 0)
+      return res.status(404).json({ error: "User not found" });
+
+    res.status(200).json({ message: "Name changed successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
 
-
-module.exports = {register, login, getAllUsers, getMe, userHistory, deleteUser};
+module.exports = {register, login, getAllUsers, getMe, userHistory, deleteUser, changePassword, changeName};
