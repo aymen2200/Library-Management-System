@@ -454,6 +454,71 @@ const addToFavorite = async (req, res, next) => {
   }
 };
 
+const favorites = async (req, res, next) => { // Get All Favorites!
+  const userID = req.user.id;
+  try {
+    const [rows] = await db.query(
+      `SELECT b.BookID, b.Title, b.ISBN, b.Genre, b.Image, b.AdditionalDetails,
+              GROUP_CONCAT(a.FullName SEPARATOR ', ') AS Authors
+       FROM Favorites f
+       JOIN Books b ON f.BookID = b.BookID
+       LEFT JOIN BookAuthors ba ON b.BookID = ba.BookID
+       LEFT JOIN Authors a ON ba.AuthorID = a.AuthorID
+       WHERE f.UserID = ? AND b.IsDeleted = FALSE
+       GROUP BY b.BookID`,
+      [userID]
+    );
+
+    res.status(200).json({ favorites: rows });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const removeFav = async (req, res, next) => {
+  const userID = req.user.id;
+  const { bookID } = req.params;
+  try {
+    const [existing] = await db.query(
+      'SELECT * FROM Favorites WHERE BookID = ? AND UserID = ?',
+      [bookID, userID]
+    );
+    if (existing.length === 0) {
+      return res.status(404).json({ error: "Book not found in favorites" });
+    }
+
+    await db.query(
+      'DELETE FROM Favorites WHERE BookID = ? AND UserID = ?',
+      [bookID, userID]
+    );
+
+    res.status(200).json({ message: "Book removed from favorites!" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const clearFav = async (req, res, next) => {
+  const userID = req.user.id;
+  try {
+    const [existing] = await db.query(
+      'SELECT * FROM favorites WHERE UserID = ?',
+      [userID]
+    );
+    if (existing.length === 0) {
+      return res.status(404).json({ error: "No favorites found" });
+    }
+
+    await db.query(
+      'DELETE FROM favorites WHERE UserID = ?',
+      [userID]
+    );
+
+    res.status(200).json({ message: "All favorites cleared!" });
+  } catch (err) {
+    next(err);
+  }
+};
 
 module.exports = {
   getAllBooks,
@@ -469,4 +534,7 @@ module.exports = {
   addCopy,
   payFine,
   addToFavorite,
+  favorites,
+  removeFav,
+  clearFav
 };

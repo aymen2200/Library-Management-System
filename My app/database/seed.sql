@@ -128,7 +128,7 @@ INSERT INTO Fines (FineID, UserID, BorrowingRecordID, NumberOfLateDays, FineAmou
 -- ------------------------------------------------------------
 -- FAVORIT
 -- ------------------------------------------------------------
-INSERT INTO Favorit (FavoriteID, UserID, CopyID) VALUES
+INSERT INTO Favorites (FavoriteID, UserID, BookID) VALUES
   (1,  2,  1),
   (2,  2,  9),
   (3,  3,  3),
@@ -136,9 +136,9 @@ INSERT INTO Favorit (FavoriteID, UserID, CopyID) VALUES
   (5,  4,  7),
   (6,  5,  11),
   (7,  6,  15),
-  (8,  7,  17),
-  (9,  8,  21),
-  (10, 9,  25),
+  (8,  7,  8),
+  (9,  8,  2),
+  (10, 9,  5),
   (11, 10, 4),
   (12, 11, 6);
 
