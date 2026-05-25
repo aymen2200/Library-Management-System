@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import BookCard from "../Components/WebsiteComponents/Book-Card";
 import AllBooksHero from "../Components/WebsiteComponents/AllBooksComponents/AllBooksHero";
 import SearchBar from "../Components/WebsiteComponents/AllBooksComponents/SearchBar";
@@ -10,61 +10,45 @@ import { useLocation } from "react-router-dom";
 const LIMIT = 20;
 
 const AllBooksPage = () => {
-  const [books, setBooks] = useState([]);
-  const [query, setQuery] = useState("default");
+  const [originalBooks, setOriginalBooks] = useState([]);
+  const [allBooks, setAllBooks] = useState([]);
   const [page, setPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
-  const skipFetch = useRef(false); 
   const location = useLocation();
 
   useEffect(() => {
-    setQuery("default");
-    setPage(1);
-  }, [location.key]);
-
-  useEffect(() => {
-    if (skipFetch.current) {
-      skipFetch.current = false;
-      return;
-    }
     const fetchBooks = async () => {
-      console.log("fetchBooks called"); 
       setLoading(true);
       try {
-        const result = query === "default"
-          ? await getAllBooks(page, LIMIT)
-          : await searchBooks(query, page, LIMIT);
-        console.log("result:", result); 
-        setBooks(result.books);
-        setTotalItems(result.totalItems);
+        const result = await getAllBooks();
+        setOriginalBooks(result);
+        setAllBooks(result);
       } catch (err) {
         console.error("API error:", err);
       }
       setLoading(false);
     };
     fetchBooks();
-  }, [query, page]);
+  }, [location.key]);
 
-  const totalPages = Math.min(Math.ceil(totalItems / LIMIT), 10);
-
-  const handleSearch = (results, searchQuery, total) => {
-    if (searchQuery === "default") {
-      setQuery("default");
-      setPage(1);
+  const handleSearch = (query) => {
+    setPage(1);
+    if (!query.trim()) {
+      setAllBooks(originalBooks);
       return;
     }
-    skipFetch.current = true;
-    setBooks(results);
-    setTotalItems(total ?? results.length);
-    setQuery(searchQuery);
-    setPage(1);
+    const results = searchBooks(query, originalBooks);
+    setAllBooks(results);
   };
+
+  const startIndex = (page - 1) * LIMIT;
+  const books = allBooks.slice(startIndex, startIndex + LIMIT);
+  const totalPages = Math.ceil(allBooks.length / LIMIT);
 
   return (
     <div className="allbooks-page">
       <AllBooksHero />
-      <SearchBar onResults={handleSearch} />
+      <SearchBar onSearch={handleSearch} />
       <h1 className="All-Books-Title">Our Book Collection</h1>
       {loading ? (
         <div className="books-loading">
@@ -75,7 +59,7 @@ const AllBooksPage = () => {
       ) : (
         <div className="allbooks-grid">
           {books.map(book => (
-            <BookCard key={book.id} book={book} />
+            <BookCard key={book.BookID} book={book} />
           ))}
         </div>
       )}

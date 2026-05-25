@@ -1,24 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { getBookDescription } from "../../APICalls/BooksAPICalls";
 import "../../Css/WebsiteCss/MainCss/BookDetailsModal.css";
 
 const BookDetailsModal = ({ book, onClose }) => {
-    const [description, setDescription] = useState("Loading...");
-    const [publishedDate, setPublishedDate] = useState("");
-
-    const title = book.volumeInfo?.title;
-    const author = book.volumeInfo?.authors?.[0];
-    const coverImg = book.volumeInfo?.imageLinks?.thumbnail;
-
-    useEffect(() => {
-        const fetchDesc = async () => {
-            const result = await getBookDescription(title, author);
-            console.log("result:", result);
-            setDescription(result.description);
-            setPublishedDate(result.publishedDate);
-        };
-        fetchDesc();
-    }, [title, author]);
+    const title = book.Title;
+    const author = book.Authors;
+    const coverImg = `https://covers.openlibrary.org/b/isbn/${book.ISBN}-L.jpg`;
+    const description = book.AdditionalDetails || "No description available.";
+    const publishedDate = book.PublicationDate || "Unknown";
 
     return (
         <div className="modal-overlay" onClick={onClose}>
