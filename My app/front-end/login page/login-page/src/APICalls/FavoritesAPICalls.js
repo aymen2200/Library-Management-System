@@ -1,26 +1,35 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://your-api.com/api"; 
+const BASE_URL = "http://localhost:3000";
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
+const getToken = () => localStorage.getItem("token");
+
+const authHeaders = () => ({
+  headers: {
+    Authorization: `Bearer ${getToken()}`
+  }
 });
 
-export const apiFetchFavorites = async (query = "") => {
-  const { data } = await api.get("/favorites", {
-    params: { query },
-  });
-  return data; 
+
+export const apiFetchFavorites = async () => {
+  const res = await axios.get(`${BASE_URL}/books/fav/getFavs`, authHeaders());
+  return res.data;
 };
+
 
 export const apiAddToFavorites = async (book) => {
-  await api.post("/favorites", { bookId: book.id });
+  const res = await axios.post(`${BASE_URL}/books/fav/addFav`, { bookID: book.BookID }, authHeaders());
+  return res.data;
 };
 
-export const apiRemoveFromFavorites = async (bookId) => {
-  await api.delete(`/favorites/${bookId}`);
+
+export const apiRemoveFromFavorites = async (bookID) => {
+  const res = await axios.delete(`${BASE_URL}/books/fav/removeFav/${bookID}`, authHeaders());
+  return res.data;
 };
+
 
 export const apiClearFavorites = async () => {
-  await api.delete("/favorites");
+  const res = await axios.delete(`${BASE_URL}/books/fav/clearFavs`, authHeaders());
+  return res.data;
 };

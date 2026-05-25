@@ -14,12 +14,12 @@ export const BookProvider = ({ children }) => {
     const { isAuthenticated } = useUserContext();
 
 
-    const loadFavorites = useCallback(async (query = "") => {
+    const loadFavorites = useCallback(async () => {
         setIsLoading(true);
         try {
-            const result = await apiFetchFavorites(query);
-            setFavorites(result.books);
-            setTotalItems(result.totalItems);
+            const result = await apiFetchFavorites();
+            setFavorites(result);
+            setTotalItems(result.length);
         } catch (err) {
             toast.error("Failed to load favorites.");
         } finally {
@@ -28,7 +28,8 @@ export const BookProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        {isAuthenticated && 
+        {
+            isAuthenticated &&
             loadFavorites();
         }
     }, [loadFavorites]);
@@ -39,7 +40,7 @@ export const BookProvider = ({ children }) => {
         try {
             await apiAddToFavorites(book);
         } catch (err) {
-            setFavorites((prev) => prev.filter((b) => b.id !== book.id));
+            setFavorites((prev) => prev.filter((b) => b.BookID !== book.BookID));
             setTotalItems((prev) => prev - 1);
             toast.error("Failed to add to favorites.");
         }
@@ -47,7 +48,7 @@ export const BookProvider = ({ children }) => {
 
     const removeFromFavorites = async (bookId) => {
         const previous = favorites;
-        setFavorites((prev) => prev.filter((b) => b.id !== bookId));
+        setFavorites((prev) => prev.filter((b) => b.BookID !== bookId));
         setTotalItems((prev) => prev - 1);
         try {
             await apiRemoveFromFavorites(bookId);
@@ -59,7 +60,7 @@ export const BookProvider = ({ children }) => {
     };
 
     const isFavorite = (bookId) => {
-        return favorites.some((book) => book.id === bookId);
+        return favorites.some((book) => book.BookID === bookId);
     };
 
     const clearFavorites = async () => {
