@@ -248,14 +248,29 @@ const getBook = async (req, res) => {
   try {
     const { id } = req.params;
     const [rows] = await db.execute(
-      `SELECT * FROM books WHERE BookID = ? AND IsDeleted = FALSE`,
-      [id],
+      `SELECT 
+        books.*,
+        GROUP_CONCAT(DISTINCT authors.FullName ORDER BY authors.FullName SEPARATOR ', ') AS Authors,
+        COUNT(DISTINCT copies.CopyID) AS TotalCopies,
+        COUNT(DISTINCT CASE WHEN copies.AvailabilityStatus = 'available' THEN copies.CopyID END) AS AvailableCopies,
+        CASE 
+          WHEN COUNT(DISTINCT copies.CopyID) = 0 THEN 'no copies'
+          WHEN COUNT(DISTINCT CASE WHEN copies.AvailabilityStatus = 'available' THEN copies.CopyID END) > 0 THEN 'available'
+          ELSE 'unavailable'
+        END AS Status
+      FROM books
+      LEFT JOIN bookauthors ON books.bookid = bookauthors.bookid
+      LEFT JOIN authors ON authors.authorid = bookauthors.authorid
+      LEFT JOIN bookcopies AS copies ON books.bookid = copies.bookid
+      WHERE books.BookID = ? AND books.IsDeleted = FALSE
+      GROUP BY books.bookid`,
+      [id]
     );
+
     if (rows.length === 0) {
-      res.status(404).json({ message: "Book not found" });
-    } else {
-      res.status(200).json(rows[0]);
+      return res.status(404).json({ message: "Book not found" });
     }
+    res.status(200).json(rows[0]);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Database error" });
