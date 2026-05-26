@@ -547,6 +547,41 @@ const clearFav = async (req, res, next) => {
   }
 };
 
+const getPopularBooks = async (req, res) => {
+  try {
+    const [rows] = await db.execute(
+      `SELECT 
+        books.*,
+        GROUP_CONCAT(DISTINCT authors.FullName ORDER BY authors.FullName SEPARATOR ', ') AS Authors,
+        COUNT(DISTINCT copies.CopyID) AS TotalCopies,
+        COUNT(DISTINCT CASE WHEN copies.AvailabilityStatus = 'available' THEN copies.CopyID END) AS AvailableCopies,
+        CASE 
+          WHEN COUNT(DISTINCT copies.CopyID) = 0 THEN 'no copies'
+          WHEN COUNT(DISTINCT CASE WHEN copies.AvailabilityStatus = 'available' THEN copies.CopyID END) > 0 THEN 'available'
+          ELSE 'unavailable'
+        END AS Status
+      FROM popularbooks
+      INNER JOIN books ON popularbooks.BookID = books.BookID
+      LEFT JOIN bookauthors ON books.BookID = bookauthors.BookID
+      LEFT JOIN authors ON authors.AuthorID = bookauthors.AuthorID
+      LEFT JOIN bookcopies AS copies ON books.BookID = copies.BookID
+      WHERE popularbooks.IsDeleted = FALSE AND books.IsDeleted = FALSE
+      GROUP BY books.BookID
+      ORDER BY RAND()
+      LIMIT 8`
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "No popular books found" });
+    }
+
+    res.status(200).json({ books: rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Database error" });
+  }
+};
+
 module.exports = {
   getAllBooks,
   createBook,
@@ -563,5 +598,6 @@ module.exports = {
   addToFavorite,
   favorites,
   removeFav,
-  clearFav
+  clearFav,
+  getPopularBooks
 };
