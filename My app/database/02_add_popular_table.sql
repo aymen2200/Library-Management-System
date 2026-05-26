@@ -1,0 +1,10 @@
+USE Librarydb;
+
+CREATE TABLE PopularBooks (
+    PopularBookID INT AUTO_INCREMENT,
+    BookID INT NOT NULL,
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    IsDeleted TINYINT(1) DEFAULT 0,
+    PRIMARY KEY (PopularBookID),
+    FOREIGN KEY (BookID) REFERENCES books(BookID)
+);
