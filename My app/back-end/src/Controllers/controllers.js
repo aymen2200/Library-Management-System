@@ -496,7 +496,7 @@ const favorites = async (req, res, next) => { // Get All Favorites!
       [userID]
     );
 
-    res.status(200).json({ favorites: rows });
+    res.status(200).json(rows);
   } catch (err) {
     next(err);
   }
@@ -575,7 +575,7 @@ const getPopularBooks = async (req, res) => {
       return res.status(404).json({ message: "No popular books found" });
     }
 
-    res.status(200).json({ books: rows });
+    res.status(200).json(rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Database error" });
