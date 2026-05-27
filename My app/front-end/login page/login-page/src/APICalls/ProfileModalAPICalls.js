@@ -16,7 +16,7 @@ export const getMe = async () => {
 };
 
 export const getFavoritesCount = async () => {
-    const res = await axios.get(`${BASE_URL}/books/fav/favorites`, authHeaders());
+    const res = await axios.get(`${BASE_URL}/books/fav/getFav`, authHeaders());
     return res.data.length;
 };
 
@@ -26,34 +26,41 @@ export const getReadingHistoryCount = async () => {
 };
 
 export const getMyFines = async () => {
-    const token = getToken();
-    const decoded = JSON.parse(atob(token.split('.')[1]));
-    const userId = decoded.id;
-    const res = await axios.get(`${BASE_URL}/books/fines`, {
-        params: { userID: userId },
-        ...authHeaders()
-    });
+    const res = await axios.get(`${BASE_URL}/books/fines`, authHeaders());
     return res.data;
 };
 
 export const updateName = async (name) => {
-    const res = await axios.put(`${BASE_URL}/user/update`, { name }, authHeaders());
+    const res = await axios.put(`${BASE_URL}/user/change-name`, { name }, authHeaders());
     return res.data;
 };
 
 export const changePassword = async (oldPassword, newPassword) => {
-    const res = await axios.put(`${BASE_URL}/user/password`, { oldPassword, newPassword }, authHeaders());
+    const res = await axios.put(`${BASE_URL}/user/change-password`, { oldPassword, newPassword }, authHeaders());
     return res.data;
 };
 
 export const updateProfilePicture = async (file) => {
     const formData = new FormData();
-    formData.append('profilePicture', file);
-    const res = await axios.put(`${BASE_URL}/user/update`, formData, {
-        headers: {
-            Authorization: `Bearer ${getToken()}`,
-            'Content-Type': 'multipart/form-data'
-        }
-    });
+    formData.append('file', file);
+    formData.append('upload_preset', 'your_upload_preset');
+
+    const cloudRes = await axios.post(
+        'https://api.cloudinary.com/v1_1/your_cloud_name/image/upload',
+        formData
+    );
+
+    const imageUrl = cloudRes.data.secure_url;
+
+    const res = await axios.put(
+        `${BASE_URL}/user/change-pfp`,
+        { profilePicture: imageUrl },
+        authHeaders()
+    );
     return res.data;
+};
+
+export const getPfp = async () => {
+    const res = await axios.get(`${BASE_URL}/user/get_user`, authHeaders());
+    return res.data.profilePicture || null;
 };

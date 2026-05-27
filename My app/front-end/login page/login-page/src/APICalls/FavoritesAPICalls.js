@@ -12,7 +12,7 @@ const authHeaders = () => ({
 
 
 export const apiFetchFavorites = async () => {
-  const res = await axios.get(`${BASE_URL}/books/fav/getFavs`, authHeaders());
+  const res = await axios.get(`${BASE_URL}/books/fav/getFav`, authHeaders());
   return res.data;
 };
 
@@ -24,12 +24,12 @@ export const apiAddToFavorites = async (book) => {
 
 
 export const apiRemoveFromFavorites = async (bookID) => {
-  const res = await axios.delete(`${BASE_URL}/books/fav/removeFav/${bookID}`, authHeaders());
+  const res = await axios.delete(`${BASE_URL}/books/fav/deleteFav/${bookID}`, authHeaders());
   return res.data;
 };
 
 
 export const apiClearFavorites = async () => {
-  const res = await axios.delete(`${BASE_URL}/books/fav/clearFavs`, authHeaders());
+  const res = await axios.delete(`${BASE_URL}/books/fav/clear`, authHeaders());
   return res.data;
 };

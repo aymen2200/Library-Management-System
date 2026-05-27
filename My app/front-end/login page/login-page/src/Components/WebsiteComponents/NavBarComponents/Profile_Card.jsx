@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import image from '../../../images/Profile_default.jpg'
 import ProfileModal from './ProfileModal'
+import { getPfp } from '../../../APICalls/ProfileModalAPICalls'
 import '../../../Css/WebsiteCuts/NavBarCss/Profile_Card.css'
 
 const Profile_Card = ({ name }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const cardRef = useRef(null)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [pfp, setPfp] = useState(null);
+    const cardRef = useRef(null);
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -17,10 +19,18 @@ const Profile_Card = ({ name }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
 
+    useEffect(() => {
+        const fetchPfp = async () => {
+            const url = await getPfp();
+            setPfp(url);
+        };
+        fetchPfp();
+    }, []);
+
     return (
         <div className='profile_card_wrapper' ref={cardRef}>
             <div className='profile_card' onClick={() => setIsModalOpen(!isModalOpen)}>
-                <img src={image} alt='profile' />
+                <img src={pfp || image} alt='profile' />
                 <p className='profile-name'>{name}</p>
             </div>
             {isModalOpen && <ProfileModal onClose={() => setIsModalOpen(false)} />}
@@ -28,4 +38,4 @@ const Profile_Card = ({ name }) => {
     )
 }
 
-export default Profile_Card
+export default Profile_Card;

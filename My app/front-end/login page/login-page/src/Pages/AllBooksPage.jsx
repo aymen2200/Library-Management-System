@@ -3,7 +3,7 @@ import BookCard from "../Components/WebsiteComponents/Book-Card";
 import AllBooksHero from "../Components/WebsiteComponents/AllBooksComponents/AllBooksHero";
 import SearchBar from "../Components/WebsiteComponents/AllBooksComponents/SearchBar";
 import Pagination from "../Components/WebsiteComponents/Pagination";
-import { getAllBooks, searchBooks } from "../APICalls/BooksAPICalls";
+import { getAllBooks, searchBooks } from "../APICalls/AllBooksAPICalls";
 import "../Css/WebsiteCss/AllBooksCss/AllBooksPage.css";
 import { useLocation } from "react-router-dom";
 

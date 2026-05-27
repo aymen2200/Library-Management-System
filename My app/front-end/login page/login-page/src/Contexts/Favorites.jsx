@@ -14,25 +14,22 @@ export const BookProvider = ({ children }) => {
     const { isAuthenticated } = useUserContext();
 
 
-    const loadFavorites = useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const result = await apiFetchFavorites();
-            setFavorites(result);
-            setTotalItems(result.length);
-        } catch (err) {
-            toast.error("Failed to load favorites.");
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
-
     useEffect(() => {
-        {
-            isAuthenticated &&
-            loadFavorites();
-        }
-    }, [loadFavorites]);
+        const loadFavorites = async () => {
+            setIsLoading(true);
+            try {
+                const result = await apiFetchFavorites();
+                setFavorites(result);
+                setTotalItems(result.length);
+            } catch (err) {
+                toast.error("Failed to load favorites.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        isAuthenticated && loadFavorites();
+    }, [isAuthenticated]);
 
     const addToFavorites = async (book) => {
         setFavorites((prev) => [...prev, book]);

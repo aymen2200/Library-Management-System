@@ -4,13 +4,13 @@ import { useUserContext } from '../../../Contexts/User'
 import { Heart, BookOpen, LogOut, Camera, X, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import defaultImage from '../../../images/Profile_default.jpg'
 import '../../../Css/WebsiteCss/NavBarCss/ProfileModal.css'
-import { getMe, updateName, changePassword, getFavoritesCount, getReadingHistoryCount, getMyFines } from '../../../api/userApi'
+import { getMe, updateName, changePassword, getFavoritesCount, getReadingHistoryCount, getMyFines, updateProfilePicture } from '../../../api/userApi'
+import { getPfp } from '../../../APICalls/ProfileModalAPICalls'
 
 const ProfileModal = ({ onClose }) => {
     const { currentUser, logout, UserInfo } = useUserContext()
     const navigate = useNavigate()
 
-    const [profileImage, setProfileImage] = useState(defaultImage)
     const [isEditingName, setIsEditingName] = useState(false)
     const [name, setName] = useState(currentUser.name || 'User')
     const [showPasswordForm, setShowPasswordForm] = useState(false)
@@ -24,6 +24,7 @@ const ProfileModal = ({ onClose }) => {
     const [fines, setFines] = useState([])
     const [passwordError, setPasswordError] = useState('')
     const [passwordSuccess, setPasswordSuccess] = useState('')
+    const [pfp, setPfp] = useState(null)
 
     const fileInputRef = useRef(null)
 
@@ -63,15 +64,20 @@ const ProfileModal = ({ onClose }) => {
         fetchData()
     }, [])
 
+    useEffect(() => {
+        const fetchPfp = async () => {
+            const url = await getPfp()
+            setPfp(url)
+        }
+        fetchPfp()
+    }, [])
+
     const handleImageChange = async (e) => {
         const file = e.target.files[0]
         if (file) {
-            const reader = new FileReader()
-            reader.onloadend = () => setProfileImage(reader.result)
-            reader.readAsDataURL(file)
-
             try {
-                await updateProfilePicture(file)
+                const data = await updateProfilePicture(file)
+                setPfp(data.profilePicture)
             } catch (err) {
                 console.error('Failed to update profile picture:', err)
             }
@@ -129,7 +135,7 @@ const ProfileModal = ({ onClose }) => {
         <div className='profile-modal'>
             <div className='modal-avatar-section'>
                 <div className='modal-avatar-wrapper'>
-                    <img src={profileImage} alt='profile' className='modal-avatar' />
+                    <img src={pfp || defaultImage} alt='profile' className='modal-avatar' />
                     <button className='modal-avatar-edit' onClick={() => fileInputRef.current.click()}>
                         <Camera size={13} />
                     </button>
@@ -216,4 +222,4 @@ const ProfileModal = ({ onClose }) => {
     )
 }
 
-export default ProfileModal
+export default ProfileModal;
