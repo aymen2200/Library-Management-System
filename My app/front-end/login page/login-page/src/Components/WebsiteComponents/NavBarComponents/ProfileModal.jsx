@@ -4,8 +4,7 @@ import { useUserContext } from '../../../Contexts/User'
 import { Heart, BookOpen, LogOut, Camera, X, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import defaultImage from '../../../images/Profile_default.jpg'
 import '../../../Css/WebsiteCss/NavBarCss/ProfileModal.css'
-import { getMe, updateName, changePassword, getFavoritesCount, getReadingHistoryCount, getMyFines, updateProfilePicture } from '../../../api/userApi'
-import { getPfp } from '../../../APICalls/ProfileModalAPICalls'
+import { getMe, updateName, changePassword, getFavoritesCount, getReadingHistoryCount, getMyFines, updateProfilePicture , getPfp } from '../../../APICalls/ProfileModalAPICalls';
 
 const ProfileModal = ({ onClose }) => {
     const { currentUser, logout, UserInfo } = useUserContext()

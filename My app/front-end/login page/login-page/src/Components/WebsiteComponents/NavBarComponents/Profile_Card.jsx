@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import image from '../../../images/Profile_default.jpg'
 import ProfileModal from './ProfileModal'
 import { getPfp } from '../../../APICalls/ProfileModalAPICalls'
-import '../../../Css/WebsiteCuts/NavBarCss/Profile_Card.css'
+import '../../../Css/WebsiteCss/NavBarCss/Profile_Card.css'
 
 const Profile_Card = ({ name }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
