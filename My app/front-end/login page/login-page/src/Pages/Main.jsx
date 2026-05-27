@@ -11,8 +11,12 @@ const MainPage = () => {
 
     useEffect(() => {
         const fetchBooks = async () => {
-            const data = await getPopularBooks();
-            setBooks(data);
+            try {
+                const data = await getPopularBooks();
+                setBooks(data);
+            } catch (err) {
+                toast.error("Failed to load popular books.");
+            }
         };
         fetchBooks();
     }, []);
@@ -25,10 +29,10 @@ const MainPage = () => {
                 <p className="Popular-Books-SubTitle">Handpicked titles from readers around the world</p>
                 <div className="BooksCards">
                     {books.map(book => (
-                        <BookCard key={book.id} book={book} />
+                        <BookCard key={book.BookId} book={book} />
                     ))}
                 </div>
-                <FeaturesBar/>
+                <FeaturesBar />
             </div>
         </div>
     );

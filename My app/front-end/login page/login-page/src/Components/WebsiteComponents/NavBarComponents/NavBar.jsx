@@ -53,9 +53,7 @@ const NavBar = () => {
             </div>
             <div className="right-side">
                 {isAuthenticated? 
-                    <Link to='' className="right-side">
                         <Profile_Card name={currentUser.name}/>
-                    </Link> 
                     : 
                     <div className="Login-buttons">
                         <Link to='/auth' onClick={() => setIsNew(true)} className="sign-up-button">Sign Up <UserPlus size={16} /></Link>

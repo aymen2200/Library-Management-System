@@ -6,6 +6,7 @@ import Pagination from "../Components/WebsiteComponents/Pagination";
 import { getAllBooks, searchBooks } from "../APICalls/AllBooksAPICalls";
 import "../Css/WebsiteCss/AllBooksCss/AllBooksPage.css";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LIMIT = 20;
 
@@ -24,9 +25,10 @@ const AllBooksPage = () => {
         setOriginalBooks(result);
         setAllBooks(result);
       } catch (err) {
-        console.error("API error:", err);
+        toast.error("Failed to load books.");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     fetchBooks();
   }, [location.key]);

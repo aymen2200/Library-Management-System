@@ -3,7 +3,7 @@ import { useBookContext } from "../../../Contexts/Favorites";
 import BookCard from "../Book-Card";
 import Pagination from "../Pagination";
 import "../../../Css/WebsiteCss/FavoritesCss/FavoritesGrid.css";
-import { searchBooks } from "../../../APICalls/BooksAPICalls";
+import { searchBooks } from "../../../APICalls/AllBooksAPICalls";
 
 const BOOKS_PER_PAGE = 20;
 
