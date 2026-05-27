@@ -565,7 +565,7 @@ const getPopularBooks = async (req, res) => {
       LEFT JOIN bookauthors ON books.BookID = bookauthors.BookID
       LEFT JOIN authors ON authors.AuthorID = bookauthors.AuthorID
       LEFT JOIN bookcopies AS copies ON books.BookID = copies.BookID
-      WHERE popularbooks.IsDeleted = FALSE AND books.IsDeleted = FALSE
+      WHERE books.IsDeleted = FALSE
       GROUP BY books.BookID
       ORDER BY RAND()
       LIMIT 8`
