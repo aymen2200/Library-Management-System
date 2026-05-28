@@ -55,7 +55,7 @@ const login = async (req, res)=>{
     process.env.JWT_SECRET || 'tempsecret',
     { expiresIn: '72h' }
 );
-res.json({ message: "Login successful", id: user[0].UserID, name: user[0].name, token })}
+res.json({ message: "Login successful", id: user[0].UserID, name: user[0].Name, token })}
  catch (err) {
         console.error(err);
         res.status(500).json({ error: "Server error" });
