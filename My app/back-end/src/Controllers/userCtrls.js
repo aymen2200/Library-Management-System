@@ -163,20 +163,21 @@ const changeName = async (req, res) => {
 
 const getUserFines = async (req, res) => {
   const { status } = req.query;
-  const userID = req.user.userID;
+  const userID = req.user.id;
+
+  if (!userID) {
+    return res.status(401).json({ message: "Unauthorized." });
+  }
 
   try {
-    let query = `SELECT * FROM fines WHERE 1=1`;
-    const params = [];
+    let query = `SELECT * FROM fines WHERE UserID = ?`;
+    const params = [userID];
 
     if (status) {
       query += ` AND PaymentStatus = ?`;
       params.push(status);
     }
-    if (userID) {
-      query += ` AND UserID = ?`;
-      params.push(userID);
-    }
+   
 
     const [rows] = await db.execute(query, params);
 
