@@ -13,12 +13,11 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decoded = jwtDecode(token);
-      setCurrentUser({ name: decoded.name, email: decoded.email });
-      setIsAuthenticated(true);
+        const decoded = jwtDecode(token);
+        setCurrentUser({ name: decoded.name, email: decoded.email }); 
+        setIsAuthenticated(true);
     }
-  }, []);
-
+}, []);
   const logout = () => {
     setIsAuthenticated(false);
     setCurrentUser({});

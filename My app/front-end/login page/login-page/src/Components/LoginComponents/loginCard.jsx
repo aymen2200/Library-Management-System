@@ -22,7 +22,6 @@ const SignInRightSide = () => {
             const res = await axios.post("http://localhost:3000/user/login", {
                 email,
                 password,
-                role,
             });
             if (res.data.token) {
                 localStorage.setItem("token", res.data.token);
@@ -43,16 +42,6 @@ const SignInRightSide = () => {
         <div className='signInRightSide'>
             <h1>Log In</h1>
             <p className='main-paragraph2'>Fill in your details to get started</p>
-            <div className="selection">
-                <p className='sec-paragraph'>Choose your Role</p>
-                <select className="select-input"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}>
-                    <option value="" disabled>Role</option>
-                    <option value="user">User</option>
-                    <option value="librarian">Librarian</option>
-                </select>
-            </div>
             <form onSubmit={LoginSubmit}>
                 <p className='sec-paragraph'>Email Adress</p>
                 <input onChange={(e) => setEmail(e.target.value)} type='email' value={email} />
