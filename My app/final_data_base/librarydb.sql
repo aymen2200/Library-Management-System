@@ -1,5 +1,5 @@
 -- ============================================================
---  Library Management System — MySQL Schema
+--  1. librarydb.sql
 -- ============================================================
 
 CREATE DATABASE IF NOT EXISTS LibraryDB
@@ -34,7 +34,7 @@ CREATE TABLE Books (
 );
 
 -- ------------------------------------------------------------
--- BookAuthors  (many-to-many: Books <-> Authors)
+-- BookAuthors
 -- ------------------------------------------------------------
 CREATE TABLE BookAuthors (
   BookID    INT NOT NULL,
@@ -48,18 +48,19 @@ CREATE TABLE BookAuthors (
 -- Users
 -- ------------------------------------------------------------
 CREATE TABLE Users (
-  UserID        INT           NOT NULL AUTO_INCREMENT,
-  Name          VARCHAR(150)  NOT NULL,
-  Email         VARCHAR(255)  NOT NULL UNIQUE,
-  PasswordHash  VARCHAR(255)  NOT NULL,
-  Role          ENUM('member','librarian','admin') NOT NULL DEFAULT 'member',
-  IsDeleted     BOOLEAN       NOT NULL DEFAULT FALSE,
-  CreatedAt     TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UserID         INT           NOT NULL AUTO_INCREMENT,
+  Name           VARCHAR(150)  NOT NULL,
+  Email          VARCHAR(255)  NOT NULL UNIQUE,
+  PasswordHash   VARCHAR(255)  NOT NULL,
+  ProfilePicture VARCHAR(500)  DEFAULT NULL,
+  Role           ENUM('member','librarian','admin') NOT NULL DEFAULT 'member',
+  IsDeleted      BOOLEAN       NOT NULL DEFAULT FALSE,
+  CreatedAt      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (UserID)
 );
 
 -- ------------------------------------------------------------
--- BookCopies  (physical copies of a book)
+-- BookCopies
 -- ------------------------------------------------------------
 CREATE TABLE BookCopies (
   CopyID             INT          NOT NULL AUTO_INCREMENT,
@@ -90,11 +91,11 @@ CREATE TABLE BorrowingRecords (
   BorrowingDate      DATE      NOT NULL DEFAULT (CURRENT_DATE),
   DueDate            DATE      NOT NULL,
   ActualReturnDate   DATE,
-  Status ENUM('borrowed', 'returned', 'overdue', 'lost') NOT NULL DEFAULT 'borrowed',
+  Status             ENUM('borrowed', 'returned', 'overdue', 'lost') NOT NULL DEFAULT 'borrowed',
   CreatedAt          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (BorrowingRecordID),
-  CONSTRAINT fk_br_user FOREIGN KEY (UserID) REFERENCES Users(UserID)         ON DELETE RESTRICT,
-  CONSTRAINT fk_br_copy FOREIGN KEY (CopyID) REFERENCES BookCopies(CopyID)    ON DELETE RESTRICT
+  CONSTRAINT fk_br_user FOREIGN KEY (UserID) REFERENCES Users(UserID)      ON DELETE RESTRICT,
+  CONSTRAINT fk_br_copy FOREIGN KEY (CopyID) REFERENCES BookCopies(CopyID) ON DELETE RESTRICT
 );
 
 -- ------------------------------------------------------------
@@ -114,7 +115,7 @@ CREATE TABLE Fines (
 );
 
 -- ------------------------------------------------------------
--- Favorit  (users save copies they like)
+-- Favorites
 -- ------------------------------------------------------------
 CREATE TABLE Favorites (
   FavoriteID  INT       NOT NULL AUTO_INCREMENT,
@@ -123,12 +124,18 @@ CREATE TABLE Favorites (
   CreatedAt   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (FavoriteID),
   UNIQUE KEY uq_fav (UserID, BookID),
-  CONSTRAINT fk_fav_user FOREIGN KEY (UserID) REFERENCES Users(UserID)      ON DELETE CASCADE,
-  CONSTRAINT fk_fav_copy FOREIGN KEY (BookID) REFERENCES Books(BookID) ON DELETE CASCADE
+  CONSTRAINT fk_fav_user FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
+  CONSTRAINT fk_fav_book FOREIGN KEY (BookID) REFERENCES Books(BookID) ON DELETE CASCADE
 );
 
 -- ------------------------------------------------------------
--- Seed default settings row
+-- PopularBooks
 -- ------------------------------------------------------------
-INSERT INTO Settings (DefaultBorrowDays, DefaultFinePerDay)
-VALUES (14, 0.50);
+CREATE TABLE PopularBooks (
+  PopularBookID  INT        NOT NULL AUTO_INCREMENT,
+  BookID         INT        NOT NULL,
+  CreatedAt      TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  IsDeleted      BOOLEAN    NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (PopularBookID),
+  CONSTRAINT fk_popular_book FOREIGN KEY (BookID) REFERENCES Books(BookID) ON DELETE CASCADE
+);
