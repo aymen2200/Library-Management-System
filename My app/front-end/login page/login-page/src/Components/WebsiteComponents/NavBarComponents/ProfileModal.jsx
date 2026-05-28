@@ -4,7 +4,7 @@ import { useUserContext } from '../../../Contexts/User'
 import { Heart, BookOpen, LogOut, Camera, X, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import defaultImage from '../../../images/Profile_default.jpg'
 import '../../../Css/WebsiteCss/NavBarCss/ProfileModal.css'
-import { getMe, updateName, changePassword, getFavoritesCount, getReadingHistoryCount, getMyFines, updateProfilePicture , getPfp } from '../../../APICalls/ProfileModalAPICalls';
+import { getMe, updateName, changePassword, getFavoritesCount, getReadingHistoryCount, getMyFines, updateProfilePicture, getPfp } from '../../../APICalls/ProfileModalAPICalls';
 
 const ProfileModal = ({ onClose }) => {
     const { currentUser, logout, UserInfo } = useUserContext()
@@ -141,81 +141,83 @@ const ProfileModal = ({ onClose }) => {
                     <input type='file' accept='image/*' ref={fileInputRef} onChange={handleImageChange} style={{ display: 'none' }} />
                 </div>
             </div>
-
-            <div className='modal-name-section'>
-                {isEditingName ? (
-                    <div className='modal-name-edit'>
-                        <input value={name} onChange={(e) => setName(e.target.value)} className='modal-name-input' autoFocus />
-                        <button className='modal-save-btn' onClick={handleNameSave}>Save</button>
-                        <button className='modal-cancel-btn' onClick={() => setIsEditingName(false)}><X size={14} /></button>
-                    </div>
-                ) : (
-                    <p className='modal-name' onClick={() => setIsEditingName(true)} title='Click to edit'>
-                        {name} <span className='modal-edit-hint'>✎</span>
-                    </p>
-                )}
-                <p className='modal-email'>{currentUser.email}</p>
-                <p className='modal-since'>Member since {memberSince}</p>
-            </div>
-
-            <div className='modal-divider' />
-
-            <div className='modal-stats'>
-                <div className='modal-stat' onClick={handleFavoritesClick}>
-                    <Heart size={16} />
-                    <span className='modal-stat-value'>{favoritesCount}</span>
-                    <span className='modal-stat-label'>Favorites</span>
-                </div>
-                <div className='modal-stat-divider' />
-                <div className='modal-stat' onClick={handleHistoryClick}>
-                    <BookOpen size={16} />
-                    <span className='modal-stat-value'>{readingHistoryCount}</span>
-                    <span className='modal-stat-label'>Books Read</span>
-                </div>
-            </div>
-
-            {pendingFines.length > 0 && (
-                <>
-                    <div className='modal-divider' />
-                    <div className='modal-fines'>
-                        <AlertCircle size={15} color='#c0392b' />
-                        <span className='modal-fines-text'>Outstanding fines: <strong>{totalFines} DZD</strong></span>
-                    </div>
-                </>
-            )}
-
-            <div className='modal-divider' />
-
-            <div className='modal-actions'>
-                <button className='modal-action-btn' onClick={() => setShowPasswordForm(!showPasswordForm)}>
-                    <KeyRound size={15} />
-                    Change Password
-                </button>
-
-                {showPasswordForm && (
-                    <div className='modal-password-form'>
-                        <div className='modal-password-input-wrapper'>
-                            <input type={showOldPassword ? 'text' : 'password'} placeholder='Current password' value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} className='modal-password-input' />
-                            <span onClick={() => setShowOldPassword(!showOldPassword)}>
-                                {showOldPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                            </span>
+            
+            <div className="infos-Section">
+                <div className='modal-name-section'>
+                    {isEditingName ? (
+                        <div className='modal-name-edit'>
+                            <input value={name} onChange={(e) => setName(e.target.value)} className='modal-name-input' autoFocus />
+                            <button className='modal-save-btn' onClick={handleNameSave}>Save</button>
+                            <button className='modal-cancel-btn' onClick={() => setIsEditingName(false)}><X size={14} /></button>
                         </div>
-                        <div className='modal-password-input-wrapper'>
-                            <input type={showNewPassword ? 'text' : 'password'} placeholder='New password' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className='modal-password-input' />
-                            <span onClick={() => setShowNewPassword(!showNewPassword)}>
-                                {showNewPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                            </span>
-                        </div>
-                        {passwordError && <p className='modal-password-error'>{passwordError}</p>}
-                        {passwordSuccess && <p className='modal-password-success'>{passwordSuccess}</p>}
-                        <button className='modal-password-save-btn' onClick={handlePasswordChange}>Update Password</button>
+                    ) : (
+                        <p className='modal-name' onClick={() => setIsEditingName(true)} title='Click to edit'>
+                            {name} <span className='modal-edit-hint'>✎</span>
+                        </p>
+                    )}
+                    <p className='modal-email'>{currentUser.email}</p>
+                    <p className='modal-since'>Member since {memberSince}</p>
+                </div>
+
+                <div className='modal-divider' />
+
+                <div className='modal-stats'>
+                    <div className='modal-stat' onClick={handleFavoritesClick}>
+                        <Heart size={16} />
+                        <span className='modal-stat-value'>{favoritesCount}</span>
+                        <span className='modal-stat-label'>Favorites</span>
                     </div>
+                    <div className='modal-stat-divider' />
+                    <div className='modal-stat' onClick={handleHistoryClick}>
+                        <BookOpen size={16} />
+                        <span className='modal-stat-value'>{readingHistoryCount}</span>
+                        <span className='modal-stat-label'>Books Read</span>
+                    </div>
+                </div>
+
+                {pendingFines.length > 0 && (
+                    <>
+                        <div className='modal-divider' />
+                        <div className='modal-fines'>
+                            <AlertCircle size={15} color='#c0392b' />
+                            <span className='modal-fines-text'>Outstanding fines: <strong>{totalFines} DZD</strong></span>
+                        </div>
+                    </>
                 )}
 
-                <button className='modal-logout-btn' onClick={handleLogout}>
-                    <LogOut size={15} />
-                    Logout
-                </button>
+                <div className='modal-divider' />
+
+                <div className='modal-actions'>
+                    <button className='modal-action-btn' onClick={() => setShowPasswordForm(!showPasswordForm)}>
+                        <KeyRound size={15} />
+                        Change Password
+                    </button>
+
+                    {showPasswordForm && (
+                        <div className='modal-password-form'>
+                            <div className='modal-password-input-wrapper'>
+                                <input type={showOldPassword ? 'text' : 'password'} placeholder='Current password' value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} className='modal-password-input' />
+                                <span onClick={() => setShowOldPassword(!showOldPassword)}>
+                                    {showOldPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                                </span>
+                            </div>
+                            <div className='modal-password-input-wrapper'>
+                                <input type={showNewPassword ? 'text' : 'password'} placeholder='New password' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className='modal-password-input' />
+                                <span onClick={() => setShowNewPassword(!showNewPassword)}>
+                                    {showNewPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                                </span>
+                            </div>
+                            {passwordError && <p className='modal-password-error'>{passwordError}</p>}
+                            {passwordSuccess && <p className='modal-password-success'>{passwordSuccess}</p>}
+                            <button className='modal-password-save-btn' onClick={handlePasswordChange}>Update Password</button>
+                        </div>
+                    )}
+
+                    <button className='modal-logout-btn' onClick={handleLogout}>
+                        <LogOut size={15} />
+                        Logout
+                    </button>
+                </div>
             </div>
         </div>
     )

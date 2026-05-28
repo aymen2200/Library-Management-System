@@ -190,7 +190,7 @@ if (existing.length > 0) {
 
     await connection.execute(
       `INSERT INTO BookCopies 
-            (BookID, Barcode, AvailabilityStatus) Values (?,?,'Available')`,
+            (BookID, Barcode, AvailabilityStatus) Values (?,?,'available')`,
       [newBookID, Barcode],
     );
 
@@ -356,27 +356,12 @@ const borrowBook = async (req, res) => {
   const { userid } = req.body;
   const connection = await db.getConnection();
   try {
-
-    const [[{ activeBorrows }]] = await connection.execute(
-      `SELECT COUNT(*) AS activeBorrows
-       FROM borrowingrecords
-       WHERE userid = ?
-         AND status IN ('borrowed', 'overdue')`,
-      [userid],
-    );
-
-    if (activeBorrows >= 3) {
-      return res.status(409).json({
-        message: "You cannot borrow more than 3 books at a time.",
-      });
-    }
-
-    const [rows] = await connection.execute(
-      `SELECT bookcopies.*
-       FROM bookcopies INNER JOIN books ON books.bookid = bookcopies.bookid
-       WHERE books.bookid = ?
-         AND bookcopies.AvailabilityStatus = 'available'
-       LIMIT 1`,
+    const [rows] = await db.execute(
+      `SELECT *
+            FROM bookcopies INNER JOIN books ON books.bookid = bookcopies.bookid 
+            WHERE books.bookid = ?
+            AND bookcopies.AvailabilityStatus = 'available'
+            LIMIT 1`,
       [id],
     );
 
@@ -444,7 +429,7 @@ const returnBook = async (req, res) => {
     }
 
     await connection.execute(
-      `UPDATE bookcopies SET AvailabilityStatus = 'Available' WHERE CopyID = ?`,
+      `UPDATE bookcopies SET AvailabilityStatus = 'available' WHERE CopyID = ?`,
       [copyid],
     );
     await connection.execute(

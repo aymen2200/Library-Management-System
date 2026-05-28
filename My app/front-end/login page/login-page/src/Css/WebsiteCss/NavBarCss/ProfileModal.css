@@ -58,6 +58,10 @@
     color: #7b1d2e;
 }
 
+.infos-Section {
+    background-color: #FDF6EC;
+}
+
 .modal-name-section {
     padding: 0.9rem 1.2rem 0.6rem;
     text-align: center;
@@ -157,7 +161,7 @@
 }
 
 .modal-stat:hover {
-    background: #fdf6ec;
+    background: #F9EDD8;
 }
 
 .modal-stat-value {
@@ -202,7 +206,7 @@
 }
 
 .modal-action-btn:hover {
-    background: #fdf6ec;
+    background: #F9EDD8;
     color: #7b1d2e;
 }
 
@@ -270,7 +274,7 @@
 }
 
 .modal-logout-btn:hover {
-    background: #fff0f0;
+    background: #fee1e1;
 }
 
 .modal-password-error { color: #c0392b; font-size: 12px; margin: 0; }
