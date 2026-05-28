@@ -503,7 +503,7 @@ const favorites = async (req, res, next) => { // Get All Favorites!
       `SELECT b.BookID, b.Title, b.ISBN, b.Genre, b.Image, b.AdditionalDetails,
               GROUP_CONCAT(a.FullName SEPARATOR ', ') AS Authors
        FROM Favorites f
-       JOIN Books b ON f.FavoriteID = b.BookID
+       JOIN Books b ON f.BookID = b.BookID
        LEFT JOIN BookAuthors ba ON b.BookID = ba.BookID
        LEFT JOIN Authors a ON ba.AuthorID = a.AuthorID
        WHERE f.UserID = ? AND b.IsDeleted = FALSE
