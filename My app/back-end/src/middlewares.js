@@ -46,14 +46,10 @@ const registerSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-  email: Joi.string().email().required().messages({
-    'string.email': 'Valid email is required',
-    'any.required': 'Email is required'
-  }),
-  password: Joi.string().required().messages({
-    'any.required': 'Password is required'
-  })
-});
+  email: Joi.string().email().required(),
+  password: Joi.string().required()
+}).options({ allowUnknown: true });
+
 
 const changePasswordSchema = Joi.object({
   oldPassword: Joi.string().required().messages({
