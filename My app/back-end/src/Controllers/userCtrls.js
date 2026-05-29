@@ -191,5 +191,26 @@ const getUserFines = async (req, res) => {
   }
 };
 
+const updatePfp = async (req, res, next) => {
+  const userID = req.user.id;
+  const { profilePicture } = req.body;
 
-module.exports = {register, login, getAllUsers, getMe, userHistory, deleteUser, changePassword, changeName, getUserFines};
+  if (!profilePicture)
+    return res.status(400).json({ error: "Profile picture URL is required!" });
+
+  try {
+    const [rows] = await db.query(
+      'UPDATE Users SET ProfilePicture = ? WHERE UserID = ?',
+      [profilePicture, userID]
+    );
+    if (rows.affectedRows === 0)
+      return res.status(404).json({ error: "User not found" });
+
+    res.status(200).json({ message: "Profile picture updated successfully!" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+module.exports = {register, login, getAllUsers, getMe, userHistory, deleteUser, changePassword, changeName, getUserFines, updatePfp};
