@@ -191,7 +191,7 @@ if (existing.length > 0) {
 
     await connection.execute(
       `INSERT INTO BookCopies 
-            (BookID, Barcode, AvailabilityStatus) Values (?,?,'Available')`,
+            (BookID, Barcode, AvailabilityStatus) Values (?,?,'available')`,
       [newBookID, Barcode],
     );
 
@@ -361,7 +361,7 @@ const borrowBook = async (req, res) => {
       `SELECT *
             FROM bookcopies INNER JOIN books ON books.bookid = bookcopies.bookid 
             WHERE books.bookid = ?
-            AND bookcopies.AvailabilityStatus = 'Available'
+            AND bookcopies.AvailabilityStatus = 'available'
             LIMIT 1`,
       [id],
     );
@@ -382,7 +382,7 @@ const borrowBook = async (req, res) => {
     );
 
     await connection.execute(
-      `UPDATE bookcopies SET AvailabilityStatus = 'Borrowed' WHERE copyid = ?`,
+      `UPDATE bookcopies SET AvailabilityStatus = 'borrowed' WHERE copyid = ?`,
       [copyid],
     );
 
@@ -429,7 +429,7 @@ const returnBook = async (req, res) => {
     }
 
     await connection.execute(
-      `UPDATE bookcopies SET AvailabilityStatus = 'Available' WHERE CopyID = ?`,
+      `UPDATE bookcopies SET AvailabilityStatus = 'available' WHERE CopyID = ?`,
       [copyid],
     );
     await connection.execute(

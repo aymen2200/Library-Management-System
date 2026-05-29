@@ -26,7 +26,7 @@ export const getReadingHistoryCount = async () => {
 };
 
 export const getMyFines = async () => {
-    const res = await axios.get(`${BASE_URL}/books/fines`, authHeaders());
+    const res = await axios.get(`${BASE_URL}/user/fines`, authHeaders());
     return res.data;
 };
 
