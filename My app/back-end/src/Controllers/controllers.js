@@ -75,7 +75,7 @@ const getCopies = async (req, res) => {
 const getBorrowings = async (req, res) => {
   try {
     const [rows] = await db.execute(`SELECT * FROM borrowingrecords 
-      WHERE ActualReturnDate IS NULL 
+      WHERE Status = 'borrowed' 
       ORDER BY DueDate ASC`);
     if (rows.length === 0) {
       return res.status(404).json({ message: "No Active Borrowings" });
@@ -87,10 +87,9 @@ const getBorrowings = async (req, res) => {
   }
 };
 
-//View fines
+//get all fines
 const getFines = async (req, res) => {
-  const { status } = req.query;
-  const userID = req.user.userID;
+  const { status, userid } = req.query; // optionally filter by a specific user
 
   try {
     let query = `SELECT * FROM fines WHERE 1=1`;
@@ -100,15 +99,15 @@ const getFines = async (req, res) => {
       query += ` AND PaymentStatus = ?`;
       params.push(status);
     }
-    if (userID) {
+    if (userid) {
       query += ` AND UserID = ?`;
-      params.push(userID);
+      params.push(userid);
     }
 
     const [rows] = await db.execute(query, params);
 
     if (rows.length === 0) {
-      return res.status(404).json({ message: "No result" });
+      return res.status(404).json({ message: "No fines found." });
     }
     res.status(200).json(rows);
   } catch (error) {
@@ -122,7 +121,7 @@ const payFine = async (req, res) => {
   const { id } = req.params;
   try {
     const [results] = await db.execute(
-      `UPDATE fines SET PaymentStatus = 'Paid' WHERE FineID = ? AND PaymentStatus = 'Pending'`,
+      `UPDATE fines SET PaymentStatus = 'paid' WHERE FineID = ? AND PaymentStatus = 'unpaid'`,
       [id],
     );
     if (results.affectedRows === 0) {
@@ -289,7 +288,7 @@ const updateBook = async (req, res) => {
             PublicationDate = COALESCE(?,PublicationDate),
             Genre = COALESCE(?,Genre),
             AdditionalDetails = COALESCE(?,AdditionalDetails)
-            WHERE BookID = ?`,
+            WHERE BookID = ? AND IsDeleted = FALSE`,
       [
         Title ?? null,
         ISBN ?? null,
@@ -365,19 +364,20 @@ const borrowBook = async (req, res) => {
             LIMIT 1`,
       [id],
     );
+
     if (rows.length === 0) {
-      res.status(409).json({
+      return res.status(409).json({
         message: "This book is unavailable right now. Try again later.",
       });
-      return;
     }
+
     const copyid = rows[0].CopyID;
 
     await connection.beginTransaction();
 
     await connection.execute(
-      `INSERT INTO borrowingrecords (userid, copyid, borrowingdate, duedate) 
-             VALUES (?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 14 DAY))`,
+      `INSERT INTO borrowingrecords (userid, copyid, borrowingdate, duedate, status)
+       VALUES (?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 14 DAY), 'borrowed')`,
       [userid, copyid],
     );
 
@@ -405,7 +405,7 @@ const returnBook = async (req, res) => {
     const [records] = await connection.execute(
       `SELECT BorrowingRecordID, UserID, DueDate, 
                 DATEDIFF(CURDATE(), DueDate) AS DaysOverdue FROM borrowingrecords 
-                WHERE CopyID = ? AND ActualReturnDate IS NULL`,
+                WHERE CopyID = ? AND Status = 'borrowed'`,
       [copyid],
     );
 
@@ -433,8 +433,8 @@ const returnBook = async (req, res) => {
       [copyid],
     );
     await connection.execute(
-      `UPDATE borrowingrecords SET ActualReturnDate = CURDATE() WHERE CopyID = ? 
-            AND ActualReturnDate IS NULL`,
+      `UPDATE borrowingrecords SET ActualReturnDate = CURDATE(), Status = 'returned' WHERE CopyID = ? 
+            AND Status = 'borrowed'`,
       [copyid],
     );
 
@@ -488,7 +488,7 @@ const favorites = async (req, res, next) => { // Get All Favorites!
       `SELECT b.BookID, b.Title, b.ISBN, b.Genre, b.Image, b.AdditionalDetails,
               GROUP_CONCAT(a.FullName SEPARATOR ', ') AS Authors
        FROM Favorites f
-       JOIN Books b ON f.FavoriteID = b.BookID
+       JOIN Books b ON f.BookID = b.BookID
        LEFT JOIN BookAuthors ba ON b.BookID = ba.BookID
        LEFT JOIN Authors a ON ba.AuthorID = a.AuthorID
        WHERE f.UserID = ? AND b.IsDeleted = FALSE
@@ -599,5 +599,6 @@ module.exports = {
   favorites,
   removeFav,
   clearFav,
-  getPopularBooks
+  getPopularBooks,
+  restoreBook
 };

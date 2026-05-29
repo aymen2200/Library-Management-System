@@ -161,4 +161,35 @@ const changeName = async (req, res) => {
 };
 
 
-module.exports = {register, login, getAllUsers, getMe, userHistory, deleteUser, changePassword, changeName};
+const getUserFines = async (req, res) => {
+  const { status } = req.query;
+  const userID = req.user.id;
+
+  if (!userID) {
+    return res.status(401).json({ message: "Unauthorized." });
+  }
+
+  try {
+    let query = `SELECT * FROM fines WHERE UserID = ?`;
+    const params = [userID];
+
+    if (status) {
+      query += ` AND PaymentStatus = ?`;
+      params.push(status);
+    }
+   
+
+    const [rows] = await db.execute(query, params);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "No result" });
+    }
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Database error" });
+  }
+};
+
+
+module.exports = {register, login, getAllUsers, getMe, userHistory, deleteUser, changePassword, changeName, getUserFines};

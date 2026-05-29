@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 
-const { getAllBooks, createBook, getBook, updateBook, deleteBook, borrowBook, returnBook, getCopies, addCopy, getBorrowings, getFines, payFine, addToFavorite, favorites, removeFav, clearFav, getPopularBooks } = require("../controllers/controllers");
+const { getAllBooks, createBook, getBook, updateBook, deleteBook, borrowBook, returnBook, getCopies, addCopy, getBorrowings, getFines, payFine, addToFavorite, favorites, removeFav, clearFav, getPopularBooks, restoreBook } = require("../controllers/controllers");
 const { authenticate, authorize } = require('../middlewares');
 
 
@@ -13,7 +13,7 @@ router.get('/borrowings', getBorrowings);
 
 router.get('/popular', getPopularBooks)
 
-router.get('/fines', authenticate, getFines);
+router.get('/fines', getFines);
 
 router.patch('/fines/:id/pay', payFine);
 
@@ -30,6 +30,8 @@ router.post('/fav/addFav', authenticate, addToFavorite);
 router.post('/:id/borrow', borrowBook);
 
 router.get('/:id/copies', getCopies).post('/:id/copies', addCopy);
+
+router.patch('/:id/restore', restoreBook);
 
 router.get('/:id', getBook).put('/:id', updateBook).delete('/:id', deleteBook);
 
