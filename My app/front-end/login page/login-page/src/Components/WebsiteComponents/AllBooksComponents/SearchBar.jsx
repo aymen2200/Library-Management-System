@@ -18,7 +18,7 @@ const SearchBar = ({ onSearch }) => {
         <input
           type="text"
           className="search-input"
-          placeholder="Search by title or author"
+          placeholder="Search by title or author..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}

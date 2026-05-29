@@ -5,7 +5,9 @@ const BookDetailsModal = ({ book, onClose }) => {
     const author = book.Authors;
     const coverImg = `https://covers.openlibrary.org/b/isbn/${book.ISBN}-L.jpg`;
     const description = book.AdditionalDetails || "No description available.";
-    const publishedDate = book.PublicationDate || "Unknown";
+    const publishedDate = book.PublicationDate 
+    ? new Date(book.PublicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : "Unknown";
 
     return (
         <div className="modal-overlay" onClick={onClose}>

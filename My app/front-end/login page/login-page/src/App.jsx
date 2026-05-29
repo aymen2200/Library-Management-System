@@ -8,6 +8,7 @@ import MainPage from "./Pages/Main";
 import AllBooksPage from "./Pages/AllBooksPage";
 import FavoritesPage from "./Pages/FavoritesPage"
 import MyReadingJourney from "./Pages/MyReadingJourney";
+import TermsAndConditions from "./Pages/TermsAndConditions";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,6 +27,7 @@ const AppContent = () => {
         <Route path="/AllBooks" element={<AllBooksPage />} />
         <Route path="/Favorites" element={<FavoritesPage />} />
         <Route path="/MyReadingJourney" element={<MyReadingJourney />} />
+        <Route path="/TermsAndConditions" element={<TermsAndConditions/>}/>
       </Routes>
       {!hideFooter && (<Footer />)}
     </>

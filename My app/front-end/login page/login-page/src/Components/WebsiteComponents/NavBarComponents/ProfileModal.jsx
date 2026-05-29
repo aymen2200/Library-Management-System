@@ -7,9 +7,9 @@ import '../../../Css/WebsiteCss/NavBarCss/ProfileModal.css'
 import { getMe, updateName, changePassword, getFavoritesCount, getReadingHistoryCount, getMyFines, updateProfilePicture, getPfp } from '../../../APICalls/ProfileModalAPICalls';
 
 const ProfileModal = ({ onClose }) => {
-    const { currentUser, logout, UserInfo } = useUserContext()
+    const { currentUser, logout, UserInfo, pfp, setPfp } = useUserContext()
     const navigate = useNavigate()
-    
+
 
     const [isEditingName, setIsEditingName] = useState(false)
     const [name, setName] = useState(currentUser.name || 'User')
@@ -24,7 +24,6 @@ const ProfileModal = ({ onClose }) => {
     const [fines, setFines] = useState([])
     const [passwordError, setPasswordError] = useState('')
     const [passwordSuccess, setPasswordSuccess] = useState('')
-    const [pfp, setPfp] = useState(null)
 
     const fileInputRef = useRef(null)
 
@@ -76,13 +75,15 @@ const ProfileModal = ({ onClose }) => {
         const file = e.target.files[0]
         if (file) {
             try {
-                const data = await updateProfilePicture(file)
-                setPfp(data.profilePicture)
+                await updateProfilePicture(file)
+                const url = await getPfp()
+                setPfp(url) // updates context → all components re-render
             } catch (err) {
                 console.error('Failed to update profile picture:', err)
             }
         }
     }
+
 
     const handleNameSave = async () => {
         try {
@@ -142,7 +143,7 @@ const ProfileModal = ({ onClose }) => {
                     <input type='file' accept='image/*' ref={fileInputRef} onChange={handleImageChange} style={{ display: 'none' }} />
                 </div>
             </div>
-            
+
             <div className="infos-Section">
                 <div className='modal-name-section'>
                     {isEditingName ? (

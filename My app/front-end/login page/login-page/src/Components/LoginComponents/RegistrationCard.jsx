@@ -50,20 +50,48 @@ const SignUpRightSide = () => {
 
     const GoogleButton = () => {
         const googleLogin = useGoogleLogin({
-            onSuccess: (credentialResponse) => {
-                console.log(credentialResponse);
+            onSuccess: async (tokenResponse) => {
+                try {
+                    // 1. Get user info from Google
+                    const userInfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+                        headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                    });
+
+                    const { name, email } = userInfo.data;
+
+                    // 2. Try to register (will fail if already exists, that's fine)
+                    try {
+                        await axios.post("http://localhost:3000/user/register", {
+                            name,
+                            email,
+                            password: email + '_google_oauth', // dummy password
+                        });
+                    } catch (err) {
+                        // User already exists, continue to login
+                    }
+
+                    // 3. Login
+                    const loginRes = await axios.post("http://localhost:3000/user/login", {
+                        email,
+                        password: email + '_google_oauth',
+                    });
+
+                    if (loginRes.data.token) {
+                        localStorage.setItem("token", loginRes.data.token);
+                        UserInfo(loginRes.data.name, email, loginRes.data.token);
+                        login();
+                        navigate("/");
+                    }
+                } catch (err) {
+                    console.error('Google login failed', err);
+                }
             },
-            onError: () => {
-                console.log('Login Failed');
-            },
+            onError: () => console.log('Login Failed'),
         });
 
         return (
             <button className="google-btn" onClick={() => googleLogin()}>
-                <img
-                    src="https://developers.google.com/identity/images/g-logo.png"
-                    alt="Google"
-                />
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" />
                 Sign up with Google
             </button>
         );

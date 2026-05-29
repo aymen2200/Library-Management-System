@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { getPfp } from '../APICalls/ProfileModalAPICalls';
 
 const UserContext = createContext();
 
@@ -9,15 +10,23 @@ export const UserProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isNew, setIsNew] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [pfp, setPfp] = useState(null)
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-        const decoded = jwtDecode(token);
-        setCurrentUser({ name: decoded.name, email: decoded.email }); 
-        setIsAuthenticated(true);
+      const decoded = jwtDecode(token);
+      setCurrentUser({ name: decoded.name, email: decoded.email });
+      setIsAuthenticated(true);
     }
-}, []);
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      getPfp().then(url => setPfp(url))
+    }
+  }, [currentUser])
+
   const logout = () => {
     setIsAuthenticated(false);
     setCurrentUser({});
@@ -32,7 +41,7 @@ export const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ isAuthenticated, isNew, currentUser, setIsNew, login, logout, toggle, UserInfo }}>
+    <UserContext.Provider value={{ isAuthenticated, isNew, pfp, currentUser, setPfp, setIsNew, login, logout, toggle, UserInfo }}>
       {children}
     </UserContext.Provider>
   );

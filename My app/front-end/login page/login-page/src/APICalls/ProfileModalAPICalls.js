@@ -21,8 +21,13 @@ export const getFavoritesCount = async () => {
 };
 
 export const getReadingHistoryCount = async () => {
-    const res = await axios.get(`${BASE_URL}/user/get_my_history`, authHeaders());
-    return res.data.length;
+    try {
+        const res = await axios.get(`${BASE_URL}/user/get_my_history`, authHeaders());
+        return res.data.length;
+    } catch (err) {
+        if (err.response?.status === 404) return 0; // no history yet, not a real error
+        throw err;
+    }
 };
 
 export const getMyFines = async () => {
@@ -31,7 +36,7 @@ export const getMyFines = async () => {
 };
 
 export const updateName = async (name) => {
-    const res = await axios.put(`${BASE_URL}/user/change-name`, { name }, authHeaders());
+    const res = await axios.put(`${BASE_URL}/user/change-name`, { newName: name }, authHeaders());
     return res.data;
 };
 
@@ -43,17 +48,17 @@ export const changePassword = async (oldPassword, newPassword) => {
 export const updateProfilePicture = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', 'your_upload_preset');
+    formData.append('upload_preset', 'pfp_upload'); 
 
     const cloudRes = await axios.post(
-        'https://api.cloudinary.com/v1_1/your_cloud_name/image/upload',
+        'https://api.cloudinary.com/v1_1/dqtzw2l1y/image/upload',
         formData
     );
 
     const imageUrl = cloudRes.data.secure_url;
 
     const res = await axios.put(
-        `${BASE_URL}/user/change-pfp`,
+        `${BASE_URL}/user/pfp`,
         { profilePicture: imageUrl },
         authHeaders()
     );
@@ -62,5 +67,6 @@ export const updateProfilePicture = async (file) => {
 
 export const getPfp = async () => {
     const res = await axios.get(`${BASE_URL}/user/get_user`, authHeaders());
-    return res.data.profilePicture || null;
+    console.log('user data:', res.data) // check the exact field name
+    return res.data.ProfilePicture || res.data.profilePicture || null;
 };

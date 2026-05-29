@@ -3,21 +3,12 @@ import image from '../../../images/Profile_default.jpg'
 import ProfileModal from './ProfileModal'
 import { getPfp } from '../../../APICalls/ProfileModalAPICalls'
 import '../../../Css/WebsiteCss/NavBarCss/Profile_Card.css'
+import { useUserContext } from '../../../Contexts/User'
 
 const Profile_Card = ({ name }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [pfp, setPfp] = useState(null);
     const cardRef = useRef(null);
-
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (cardRef.current && !cardRef.current.contains(e.target)) {
-                setIsModalOpen(false)
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => document.removeEventListener('mousedown', handleClickOutside)
-    }, [])
+    const {pfp} = useUserContext();
 
     useEffect(() => {
         const fetchPfp = async () => {

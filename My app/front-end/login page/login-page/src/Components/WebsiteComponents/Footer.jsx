@@ -30,7 +30,7 @@ export default function Footer() {
           <Link to="/AllBooks" className="Footer-Links">All Books</Link>
           <Link to="/Favorites" className="Footer-Links">Favorites</Link>
           <Link to="/MyReadingJourney" className="Footer-Links">My Reading Journey</Link>
-          <Link to="" className="Footer-Links">Terms and Conditions</Link>
+          <Link to="/TermsAndConditions" className="Footer-Links">Terms and Conditions</Link>
         </div>
       </div>
       <p>All rights reserved © 2026 Knwoladge Library</p>
