@@ -9,6 +9,7 @@ import { getMe, updateName, changePassword, getFavoritesCount, getReadingHistory
 const ProfileModal = ({ onClose }) => {
     const { currentUser, logout, UserInfo } = useUserContext()
     const navigate = useNavigate()
+    
 
     const [isEditingName, setIsEditingName] = useState(false)
     const [name, setName] = useState(currentUser.name || 'User')
@@ -127,7 +128,7 @@ const ProfileModal = ({ onClose }) => {
         navigate('/MyReadingJourney')
     }
 
-    const pendingFines = fines.filter(f => f.PaymentStatus === 'Pending')
+    const pendingFines = fines.filter(f => f.PaymentStatus === 'unpaid')
     const totalFines = pendingFines.reduce((sum, f) => sum + f.FineAmount, 0)
 
     return (

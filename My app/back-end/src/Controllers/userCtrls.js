@@ -51,7 +51,7 @@ const login = async (req, res)=>{
     }
     
     const token = jwt.sign(
-    { name: user[0].Name, id: user[0].UserID, role: user[0].Role }, 
+    { name: user[0].Name, id: user[0].UserID, role: user[0].Role, email: user[0].Email }, 
     process.env.JWT_SECRET || 'tempsecret',
     { expiresIn: '72h' }
 );
@@ -182,7 +182,7 @@ const getUserFines = async (req, res) => {
     const [rows] = await db.execute(query, params);
 
     if (rows.length === 0) {
-      return res.status(404).json({ message: "No result" });
+      return res.status(200).json([]); // return empty array instead of 404
     }
     res.status(200).json(rows);
   } catch (error) {

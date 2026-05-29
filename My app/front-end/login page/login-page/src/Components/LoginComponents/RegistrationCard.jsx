@@ -5,6 +5,8 @@ import { useUserContext } from '../../Contexts/User';
 import '../../Css/LoginCss/RegistrationCard.css'
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom'
+import { Eye, EyeOff } from 'lucide-react';
+
 
 
 const SignUpRightSide = () => {
@@ -18,7 +20,6 @@ const SignUpRightSide = () => {
 
     const RegistrationSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const res = await axios.post("http://localhost:3000/user/register", {
                 name,
@@ -27,14 +28,23 @@ const SignUpRightSide = () => {
             });
 
             if (res.status === 201) {
+                // Auto login after registration
+                const loginRes = await axios.post("http://localhost:3000/user/login", {
+                    email,
+                    password,
+                });
+                if (loginRes.data.token) {
+                    localStorage.setItem("token", loginRes.data.token);
+                    UserInfo(loginRes.data.name, email, loginRes.data.token);
+                    login();
+                }
                 setName("");
                 setEmail("");
                 setPassword("");
                 navigate("/");
             }
-
         } catch (err) {
-            console.log("Login failed", err.response?.data);
+            console.log("Registration failed", err.response?.data);
         }
     };
 
@@ -65,11 +75,16 @@ const SignUpRightSide = () => {
             <p className='main-paragraph1'>Fill in your details to get started</p>
             <form onSubmit={RegistrationSubmit}>
                 <p className='sec-paragraph'>Name</p>
-                <input onChange={(e) => setName(e.target.value)} type="text" value={name} placeholder='Enter your Name' />
+                <input onChange={(e) => setName(e.target.value)} type="text" value={name} placeholder='Enter your Name...' />
                 <p className='sec-paragraph'>Email Address</p>
-                <input onChange={(e) => setEmail(e.target.value)} type="email" value={email} placeholder='Enter your Email' />
+                <input onChange={(e) => setEmail(e.target.value)} type="email" value={email} placeholder='Enter your Email...' />
                 <p className='sec-paragraph'>Password</p>
-                <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password} placeholder='Enter your Password' />
+                <div className='password-input-wrapper'>
+                    <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password} placeholder='Enter your Password...' />
+                    <span onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <EyeOff size={21} /> : <Eye size={21} />}
+                    </span>
+                </div>
                 <button type='submit'>Sign Up</button>
                 <p className='divider'>or</p>
                 <GoogleOAuthProvider clientId="731842341556-42d42glh08b6l0bkt01cjvokha23uto7.apps.googleusercontent.com">

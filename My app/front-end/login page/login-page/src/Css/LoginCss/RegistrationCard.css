@@ -202,3 +202,23 @@
     height: 30px;
     border-radius: 50%;
 }
+
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 440px;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+}
+
+.password-input-wrapper span {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+}

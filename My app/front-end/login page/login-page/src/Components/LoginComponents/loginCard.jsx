@@ -4,11 +4,12 @@ import axios from "axios";
 import { useUserContext } from '../../Contexts/User';
 import '../../Css/LoginCss/loginCard.css'
 import { useNavigate } from 'react-router-dom'
+import { Eye, EyeOff } from 'lucide-react';
 
 
 const SignInRightSide = () => {
 
-    const { login, UserInfo} = useUserContext();
+    const { login, UserInfo } = useUserContext();
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false);
@@ -44,9 +45,14 @@ const SignInRightSide = () => {
             <p className='main-paragraph2'>Fill in your details to get started</p>
             <form onSubmit={LoginSubmit}>
                 <p className='sec-paragraph'>Email Adress</p>
-                <input onChange={(e) => setEmail(e.target.value)} type='email' value={email} />
+                <input onChange={(e) => setEmail(e.target.value)} placeholder='Enter your Email...' type='email' value={email} />
                 <p className='sec-paragraph'>Password</p>
-                <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password} />
+                <div className='password-input-wrapper'>
+                    <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password} placeholder='Enter your Password...' />
+                    <span onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <EyeOff size={21} /> : <Eye size={21} />}
+                    </span>
+                </div>
                 <button type='submit'>Sign In</button>
             </form>
         </div>
