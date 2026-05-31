@@ -25,7 +25,7 @@ export const getReadingHistoryCount = async () => {
         const res = await axios.get(`${BASE_URL}/user/get_my_history`, authHeaders());
         return res.data.length;
     } catch (err) {
-        if (err.response?.status === 404) return 0; // no history yet, not a real error
+        if (err.response?.status === 404) return 0; 
         throw err;
     }
 };

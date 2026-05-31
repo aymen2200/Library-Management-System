@@ -295,12 +295,10 @@
 
 @media (max-width: 520px) {
   .profile-modal {
-    position: fixed;
-    inset: auto 12px 12px 12px;
-    width: auto;
-    max-width: calc(100% - 24px);
-    right: 12px;
-    top: auto;
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 260px;
   }
 
   .modal-avatar-section {
@@ -311,11 +309,6 @@
   .modal-avatar {
     width: 60px;
     height: 60px;
-  }
-
-  .modal-stats {
-    flex-direction: column;
-    gap: 8px;
   }
 
   .modal-stat-divider {

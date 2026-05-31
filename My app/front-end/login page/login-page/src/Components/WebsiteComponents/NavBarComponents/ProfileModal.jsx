@@ -77,7 +77,7 @@ const ProfileModal = ({ onClose }) => {
             try {
                 await updateProfilePicture(file)
                 const url = await getPfp()
-                setPfp(url) // updates context → all components re-render
+                setPfp(url) 
             } catch (err) {
                 console.error('Failed to update profile picture:', err)
             }
