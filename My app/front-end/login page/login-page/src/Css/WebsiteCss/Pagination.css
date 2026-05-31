@@ -49,3 +49,17 @@
   color: #aaa;
   font-size: 1rem;
 }
+
+@media (max-width: 420px) {
+  .pagination {
+    gap: 6px;
+    padding-bottom: 24px;
+  }
+
+  .page-btn,
+  .page-dots {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+}

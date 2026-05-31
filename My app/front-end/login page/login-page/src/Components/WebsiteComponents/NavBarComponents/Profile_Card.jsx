@@ -8,7 +8,7 @@ import { useUserContext } from '../../../Contexts/User'
 const Profile_Card = ({ name }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const cardRef = useRef(null);
-    const {pfp} = useUserContext();
+    const {pfp , setPfp} = useUserContext();
 
     useEffect(() => {
         const fetchPfp = async () => {

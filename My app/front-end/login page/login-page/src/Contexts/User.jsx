@@ -22,10 +22,10 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser?.email) {
       getPfp().then(url => setPfp(url))
     }
-  }, [currentUser])
+  }, [currentUser?.email])
 
   const logout = () => {
     setIsAuthenticated(false);

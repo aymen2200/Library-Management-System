@@ -73,3 +73,37 @@
   margin-top: 40px;
 }
 
+@media (max-width: 1024px) {
+  .favorites-grid-books {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .favorites-grid-books {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .favorites-grid-section {
+    padding: 32px 20px 0;
+    box-sizing: border-box;
+  }
+
+  .favorites-grid-search-bar {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .favorites-clear-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .favorites-grid-books {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}

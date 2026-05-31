@@ -16,7 +16,7 @@ const FavoritesPage = () => {
       {!isAuthenticated ? (
         <AuthRequiredCard />
       ) : (
-        <div className="favorites-page">
+        <div className={`favorites-page ${favorites.length === 0 ? "empty" : ""}`}>
           {favorites.length === 0 ? (
             <EmptyFavorites />
           ) : (

@@ -481,16 +481,24 @@ const addToFavorite = async (req, res, next) => {
   }
 };
 
-const favorites = async (req, res, next) => { // Get All Favorites!
+const favorites = async (req, res, next) => {
   const userID = req.user.id;
   try {
     const [rows] = await db.query(
       `SELECT b.BookID, b.Title, b.ISBN, b.Genre, b.Image, b.AdditionalDetails,
-              GROUP_CONCAT(a.FullName SEPARATOR ', ') AS Authors
+              GROUP_CONCAT(DISTINCT a.FullName SEPARATOR ', ') AS Authors,
+              COUNT(DISTINCT copies.CopyID) AS TotalCopies,
+              COUNT(DISTINCT CASE WHEN copies.AvailabilityStatus = 'available' THEN copies.CopyID END) AS AvailableCopies,
+              CASE 
+                WHEN COUNT(DISTINCT CASE WHEN copies.AvailabilityStatus = 'available' THEN copies.CopyID END) > 0 
+                THEN 'available'
+                ELSE 'unavailable'
+              END AS Status
        FROM Favorites f
        JOIN Books b ON f.BookID = b.BookID
        LEFT JOIN BookAuthors ba ON b.BookID = ba.BookID
        LEFT JOIN Authors a ON ba.AuthorID = a.AuthorID
+       LEFT JOIN bookcopies AS copies ON b.BookID = copies.BookID
        WHERE f.UserID = ? AND b.IsDeleted = FALSE
        GROUP BY b.BookID`,
       [userID]

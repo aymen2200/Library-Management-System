@@ -31,3 +31,24 @@
     text-overflow: ellipsis;
     margin: 0;
 }
+
+@media (max-width: 550px) {
+    .profile_card p {
+        display: none
+    }
+
+    .profile_card {
+        gap: 8px;
+        padding: 6px 12px;
+    }
+
+    .profile_card img {
+        width: 26px;
+        height: 26px;
+    }
+
+    .profile-name {
+        font-size: 13px;
+        max-width: 90px;
+    }
+}

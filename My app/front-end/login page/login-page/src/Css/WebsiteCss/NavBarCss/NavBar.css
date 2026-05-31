@@ -1,4 +1,5 @@
-nav , .navbar {
+nav,
+.navbar {
     display: flex;
     align-items: center;
     background-color: #55151C;
@@ -28,7 +29,7 @@ nav , .navbar {
 
 .left_side .logo-text {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
 }
 
 .left_side h3 {
@@ -153,3 +154,136 @@ nav , .navbar {
     background-color: rgba(221, 183, 167, 0.15);
 }
 
+
+@media (max-width: 920px) {
+
+    nav,
+    .navbar {
+        padding: 0 12px;
+        height: 68px;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+    }
+
+    .midlle-side {
+        flex-wrap: nowrap;
+        gap: 2px;
+        margin: 0 8px;
+    }
+
+    .nav-links {
+        padding: 6px 8px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .right-side {
+        margin-left: 0;
+        width: auto;
+    }
+}
+
+@media (max-width: 700px) {
+  .Login-buttons {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .sign-up-button,
+  .sign-in-button {
+    padding: 20px 8px;
+    font-size: 0.72rem;
+    line-height: 0.5;
+    height: 13px;
+  }
+}
+
+@media (max-width: 600px) {
+
+    .Login-buttons {
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .sign-up-button .auth-icon,
+    .sign-in-button .auth-icon {
+        display: none;
+    }
+
+    .left_side .logo-text {
+        display: none;
+    }
+
+    .profile-name {
+        display: none;
+    }
+
+    nav,
+    .navbar {
+        padding: 0 8px;
+        height: 60px;
+    }
+
+    .left_side h3 {
+        font-size: 13px;
+    }
+
+    .left_side p {
+        font-size: 10px;
+    }
+
+    .nav-links {
+        padding: 5px 6px;
+        font-size: 0.78rem;
+    }
+
+    .sign-up-button,
+    .sign-in-button {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+
+    nav,
+    .navbar {
+        padding: 0 6px;
+        height: 56px;
+    }
+
+    .Logo-img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .midlle-side {
+        gap: 4px;
+        margin: 0 4px;
+    }
+
+    .nav-links {
+        padding: 5px 5px;
+        font-size: 0.72rem;
+        white-space: nowrap;
+    }
+
+    .profile_card {
+        padding: 5px 8px;
+        gap: 0;
+    }
+
+    .profile_card img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .sign-up-button,
+    .sign-in-button {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+        gap: 4px;
+        height: 10px;
+    }
+}

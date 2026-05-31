@@ -1,36 +1,63 @@
 .Main-Page {
-    margin-top: 50px;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  margin-top: 50px;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .Popular-Books {
-    display: flex;
-    flex-direction: column;
-    padding: 50px 30px;
-    background-color: #F9EDD8;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 50px 30px;
+  background-color: #F9EDD8;
+  align-items: center;
+  width: 100%;
 }
 
 .Popular-Books-Title {
-    color: #55151C;
-    margin-bottom: 20px;
-    font-family: 'Playfair Display', serif;
+  color: #55151C;
+  margin-bottom: 20px;
+  font-family: 'Playfair Display', serif;
+  text-align:center;
 }
 
 .Popular-Books-SubTitle {
-    color: #55151C;
-    margin: 0 0 50px 0;
+  color: #55151C;
+  margin: 0 0 50px 0;
+  text-align:center;
 }
 
 .BooksCards {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    width: 90%;
-    max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 90%;
+  max-width: 1200px;
+}
+
+@media (max-width: 1024px) {
+  .BooksCards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .Popular-Books {
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+
+  .BooksCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .BooksCards {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
 }

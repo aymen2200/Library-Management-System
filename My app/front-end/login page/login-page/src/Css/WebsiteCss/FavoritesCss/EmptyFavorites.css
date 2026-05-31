@@ -60,3 +60,30 @@
   transform: translateY(-2px);
   box-shadow: 0 8px 28px rgba(122, 28, 46, 0.55);
 }
+
+@media (max-width: 550px) {
+  .empty-favorites-wrapper {
+    width: 85%;
+    height: auto;
+    padding: 30px 16px;
+    gap: 8px;
+  }
+
+  .empty-favorites-heart {
+    width: 80px;
+    height: 80px;
+  }
+
+  .empty-favorites-title {
+    font-size: 18px;
+  }
+
+  .empty-favorites-subtitle {
+    font-size: 13px;
+  }
+
+  .empty-favorites-browse-btn {
+    font-size: 13px;
+    padding: 10px 24px;
+  }
+}

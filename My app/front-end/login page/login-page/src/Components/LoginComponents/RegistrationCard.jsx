@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react';
 
 
-
 const SignUpRightSide = () => {
 
     const { login, UserInfo } = useUserContext();
@@ -28,7 +27,6 @@ const SignUpRightSide = () => {
             });
 
             if (res.status === 201) {
-                // Auto login after registration
                 const loginRes = await axios.post("http://localhost:3000/user/login", {
                     email,
                     password,
@@ -52,30 +50,21 @@ const SignUpRightSide = () => {
         const googleLogin = useGoogleLogin({
             onSuccess: async (tokenResponse) => {
                 try {
-                    // 1. Get user info from Google
                     const userInfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
                         headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
                     });
-
                     const { name, email } = userInfo.data;
-
-                    // 2. Try to register (will fail if already exists, that's fine)
                     try {
                         await axios.post("http://localhost:3000/user/register", {
                             name,
                             email,
-                            password: email + '_google_oauth', // dummy password
+                            password: email + '_google_oauth',
                         });
-                    } catch (err) {
-                        // User already exists, continue to login
-                    }
-
-                    // 3. Login
+                    } catch (err) { }
                     const loginRes = await axios.post("http://localhost:3000/user/login", {
                         email,
                         password: email + '_google_oauth',
                     });
-
                     if (loginRes.data.token) {
                         localStorage.setItem("token", loginRes.data.token);
                         UserInfo(loginRes.data.name, email, loginRes.data.token);
@@ -90,7 +79,7 @@ const SignUpRightSide = () => {
         });
 
         return (
-            <button className="google-btn" onClick={() => googleLogin()}>
+            <button className="google-btn" type="button" onClick={() => googleLogin()}>
                 <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" />
                 Sign up with Google
             </button>
@@ -140,9 +129,15 @@ const SignUpLeftSide = ({ Click }) => {
 
 const RegistrationCard = ({ handleClick }) => {
     return (
-        <div className="Registration-Card">
-            <SignUpLeftSide Click={handleClick} />
-            <SignUpRightSide />
+        <div className="registration-card-wrapper">
+            <div className="Registration-Card">
+                <SignUpLeftSide Click={handleClick} />
+                <SignUpRightSide />
+            </div>
+
+            <div className="signin-bottom-btn">
+                <button onClick={handleClick}>Sign In</button>
+            </div>
         </div>
     )
 }

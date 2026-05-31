@@ -123,3 +123,36 @@ footer p {
   opacity: 0.6;
   margin: 0;
 }
+
+@media (max-width: 900px) {
+  .Upper-footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .footer-left-side,
+  .footer-middle-side,
+  .footer-right-side {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .footer-left-side-description {
+    max-width: 100%;
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  footer {
+    padding: 32px 16px 20px;
+    gap: 24px;
+  }
+
+  .contacts {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}

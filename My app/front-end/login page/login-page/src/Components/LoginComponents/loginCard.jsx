@@ -13,12 +13,10 @@ const SignInRightSide = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false);
-    const [role, setRole] = useState('');
     const navigate = useNavigate();
 
     const LoginSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const res = await axios.post("http://localhost:3000/user/login", {
                 email,
@@ -32,8 +30,6 @@ const SignInRightSide = () => {
                 login();
                 navigate('/');
             }
-
-
         } catch (err) {
             console.log("Login failed", err.response?.data);
         }
@@ -44,11 +40,21 @@ const SignInRightSide = () => {
             <h1>Log In</h1>
             <p className='main-paragraph2'>Fill in your details to get started</p>
             <form onSubmit={LoginSubmit}>
-                <p className='sec-paragraph'>Email Adress</p>
-                <input onChange={(e) => setEmail(e.target.value)} placeholder='Enter your Email...' type='email' value={email} />
+                <p className='sec-paragraph'>Email Address</p>
+                <input
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder='Enter your Email...'
+                    type='email'
+                    value={email}
+                />
                 <p className='sec-paragraph'>Password</p>
                 <div className='password-input-wrapper'>
-                    <input type={showPassword ? 'text' : 'password'} onChange={(e) => setPassword(e.target.value)} value={password} placeholder='Enter your Password...' />
+                    <input
+                        type={showPassword ? 'text' : 'password'}
+                        onChange={(e) => setPassword(e.target.value)}
+                        value={password}
+                        placeholder='Enter your Password...'
+                    />
                     <span onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff size={21} /> : <Eye size={21} />}
                     </span>
@@ -67,7 +73,7 @@ const SignInLeftSide = ({ Click }) => {
                 <h3>Knowledge Library</h3>
                 <p>Where the Journey Begins</p>
             </div>
-            <h1>Hello , Freind!</h1>
+            <h1>Hello , Friend!</h1>
             <p>Register with your personal details to use the site features</p>
             <button onClick={Click}>Sign Up</button>
         </div>
@@ -76,11 +82,16 @@ const SignInLeftSide = ({ Click }) => {
 
 const LogInCard = ({ handleClick }) => {
     return (
-        <div className="login-Card">
-            <SignInLeftSide Click={handleClick} />
-            <SignInRightSide />
-        </div>
+        <div className="login-card-wrapper">
+            <div className="login-Card">
+                <SignInLeftSide Click={handleClick} />
+                <SignInRightSide />
+            </div>
 
+            <div className="signup-bottom-btn">
+                <button onClick={handleClick}>Sign Up</button>
+            </div>
+        </div>
     )
 }
 
