@@ -25,7 +25,7 @@ const authenticate = async (req,res,next)=>{
 }
 
 const authorize = (req,res,next)=>{
-    if (req.user.role !== 0)
+    if (!req.user.role.equals("admin"))
         return res.status(403).json({ error: 'Admin access only.' });
     
     next();

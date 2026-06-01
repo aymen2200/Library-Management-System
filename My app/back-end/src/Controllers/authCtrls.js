@@ -37,7 +37,7 @@ const login = async (req, res) => {
  
         //5- If found: Creating the token:
         const token = jwt.sign(
-            { id: admin.UserID, userName: admin.Name, role: 0 },
+            { id: admin.UserID, userName: admin.Name, role: "admin" },
             process.env.JWT_SECRET || 'tempsecret',
             { expiresIn: '8h' }
         );

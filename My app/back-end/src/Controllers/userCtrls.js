@@ -65,7 +65,7 @@ const login = async (req, res) => {
 
 // Getting all users:
 const getAllUsers = async (req, res) => {
-  const [users] = await db.query('SELECT * FROM Users WHERE Role = 1 and IsDeleted = 0')
+  const [users] = await db.query('SELECT * FROM Users WHERE Role = "member" and IsDeleted = 0')
   const getUsers = users.map(({ PasswordHash, Role, ...rest }) => rest)        //destructering the objects and extracting password and returning just rest (all except password)
   res.json(getUsers);
 };
