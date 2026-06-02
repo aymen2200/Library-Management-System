@@ -14,7 +14,7 @@ WHERE BorrowingRecordID IN (
         'the snowman', 'The eye of the world', 'where the crawdads sing', 'anxious people', 
         'One Flew Over the Cuckoo\'s Nest', 'little fires everywhere', 'elon musk', 
         'the outsiders', 'happy place', 'The Seven Husbands of Evelyn Hugo', 
-        'the light we carry', 'the atlas six', 'clarity'
+        'the light we carry', 'the atlas six', 'clarity', 'the notebook'
     )
 );
 
@@ -29,7 +29,7 @@ WHERE CopyID IN (
         'the snowman', 'The eye of the world', 'where the crawdads sing', 'anxious people', 
         'One Flew Over the Cuckoo\'s Nest', 'little fires everywhere', 'elon musk', 
         'the outsiders', 'happy place', 'The Seven Husbands of Evelyn Hugo', 
-        'the light we carry', 'the atlas six', 'clarity'
+        'the light we carry', 'the atlas six', 'clarity', 'the notebook'
     )
 );
 
