@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import { useBookContext } from "../Contexts/Favorites";
 import { useUserContext } from "../Contexts/User";
 import AuthRequiredCard from "../Components/WebsiteComponents/AuthentificationRequestCard";

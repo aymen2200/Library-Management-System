@@ -1,0 +1,185 @@
+.reading-journey-page {
+  background-color: #f5ede3;
+  min-height: 100vh;
+  padding: 60px 80px;
+  box-sizing: border-box;
+}
+
+.reading-journey-header {
+  margin-bottom: 40px;
+}
+
+.reading-journey-title {
+  font-size: 40px;
+  font-weight: bold;
+  color: #3b1a10;
+  font-family: 'Georgia', serif;
+  margin: 0 0 8px 0;
+}
+
+.reading-journey-count {
+  font-size: 15px;
+  color: #9e7b6b;
+  font-family: 'Georgia', serif;
+  margin: 0;
+}
+
+.reading-journey-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #ffffff;
+  border: 1px solid #d6bfaf;
+  border-radius: 10px;
+  padding: 12px 20px;
+  width: 340px;
+  margin: 0 auto 40px auto;
+}
+
+.reading-journey-search-input {
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #3b1a10;
+  background-color: transparent;
+  width: 100%;
+  font-family: 'Georgia', serif;
+}
+
+.reading-journey-search-input::placeholder {
+  color: #b89e8e;
+}
+
+.reading-journey-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reading-journey-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #d6bfaf;
+  border-radius: 12px;
+  padding: 20px 32px;
+  box-shadow: 0 2px 8px rgba(100, 40, 20, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reading-journey-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(100, 40, 20, 0.15);
+}
+
+.reading-journey-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reading-journey-book-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #3b1a10;
+  font-family: 'Georgia', serif;
+  margin: 0;
+}
+
+.reading-journey-book-genre {
+  font-size: 14px;
+  color: #9e7b6b;
+  font-family: 'Georgia', serif;
+  margin: 0;
+}
+
+.reading-journey-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.reading-journey-date {
+  font-size: 13px;
+  color: #7a5c4f;
+  font-family: 'Georgia', serif;
+  margin: 0;
+}
+
+.reading-journey-status {
+  font-size: 13px;
+  font-weight: bold;
+  font-family: 'Georgia', serif;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+.reading-journey-status.returned {
+  background-color: #e6f4ea;
+  color: #2e7d32;
+}
+
+.reading-journey-status.borrowed {
+  background-color: #e3f0fb;
+  color: #1565c0;
+}
+
+.reading-journey-status.overdue {
+  background-color: #fdecea;
+  color: #c62828;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reading-journey-card {
+  animation: slideUp 0.5s ease both;
+}
+
+@media (max-width: 768px) {
+  .reading-journey-page {
+    padding: 40px 24px;
+  }
+
+  .reading-journey-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .reading-journey-card-right {
+    align-items: flex-start;
+  }
+
+  .reading-journey-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 520px) {
+  .reading-journey-page {
+    padding: 30px 16px;
+  }
+
+  .reading-journey-search-bar {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .reading-journey-title {
+    font-size: 22px;
+  }
+}

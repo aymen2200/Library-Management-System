@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import { useBookContext } from "../../../Contexts/Favorites";
 import heartTitle from "../../../images/Website-images/Favorites-Title-img.png";
 import heroBook from "../../../images/Website-images/Favorites-Page-img.png";

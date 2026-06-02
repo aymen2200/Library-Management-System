@@ -1,0 +1,13 @@
+.reading-journey-page {
+  background-color: #F9EDD8;
+  margin-top: 60px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  width: 100vw;
+}
+
+.reading-journey-page.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

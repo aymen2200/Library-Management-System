@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useUserContext } from "../../../Contexts/User";
 import image from '../../../images/Logos/Logo-dark.png'
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink , useNavigate } from "react-router-dom";
 import Profile_Card from "./Profile_Card";
 import '../../../Css/WebsiteCss/NavBarCss/NavBar.css'
 import { UserPlus, LogIn } from "lucide-react";
-import { getGenres } from "../../../APICalls/CategoriesAPICalls";
+import {useCategoriesContext} from "../../../Contexts/Categories";
 
 
 const NavBar = () => {
@@ -13,6 +13,8 @@ const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { setIsNew, isAuthenticated, currentUser } = useUserContext();
     const [isSmall, setIsSmall] = useState(() => window.innerWidth <= 480);
+    const {fetchBooksByGenre} = useCategoriesContext();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const mediaQuery = window.matchMedia('(max-width: 480px)');
@@ -64,7 +66,12 @@ const NavBar = () => {
                     {isOpen && (
                         <ul>
                             {categories.map((cat, index) => (
-                                <li key={index}>{cat}</li>
+                                <li key={index} onClick={() => {
+                                    fetchBooksByGenre(cat)
+                                    navigate('/Categories');
+                                    }}>
+                                    {cat}
+                                </li>
                             ))}
                         </ul>
                     )}
