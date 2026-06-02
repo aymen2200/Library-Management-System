@@ -420,7 +420,7 @@ const returnBook = async (req, res) => {
     const { BorrowingRecordID, UserID, DaysOverdue } = records[0];
 
     if (DaysOverdue > 0) {
-      const fine = DaysOverdue * 100;
+      const fine = DaysOverdue * 50;
       await connection.execute(
         `INSERT INTO fines (UserID, BorrowingRecordID, NumberOfLateDays, FineAmount) 
                 VALUES(?,?,?,?)`,
