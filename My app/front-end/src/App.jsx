@@ -11,14 +11,15 @@ import FavoritesPage from "./Pages/FavoritesPage"
 import MyReadingJourney from "./Pages/MyReadingJourney";
 import TermsAndConditions from "./Pages/TermsAndConditions";
 import CategoriesPage from "./Pages/CategoriesPage";
+import AdminApp from "./admin/App1.jsx";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AppContent = () => {
   const location = useLocation();
-  const hideNavbar = ["/auth"].includes(location.pathname);
-  const hideFooter = ["/auth"].includes(location.pathname);
+  const hideNavbar = ["/auth"].includes(location.pathname) || location.pathname.startsWith("/admin");
+  const hideFooter = ["/auth"].includes(location.pathname) || location.pathname.startsWith("/admin");
 
   return (
     <>
@@ -29,8 +30,9 @@ const AppContent = () => {
         <Route path="/AllBooks" element={<AllBooksPage />} />
         <Route path="/Favorites" element={<FavoritesPage />} />
         <Route path="/MyReadingJourney" element={<MyReadingJourney />} />
-        <Route path="/TermsAndConditions" element={<TermsAndConditions/>}/>
+        <Route path="/TermsAndConditions" element={<TermsAndConditions />} />
         <Route path="/Categories" element={<CategoriesPage />} />
+        <Route path="/admin/*" element={<AdminApp />} />
       </Routes>
       {!hideFooter && (<Footer />)}
     </>

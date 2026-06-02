@@ -1,5 +1,5 @@
 import Icon from "./Icon";
-import { icons } from "../utils";
+import { icons } from "../../utils";
 import "./Modal.css";
 
 const Modal = ({ title, onClose, children }) => (

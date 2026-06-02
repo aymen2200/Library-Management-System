@@ -24,10 +24,9 @@ const authenticate = async (req,res,next)=>{
     }
 }
 
-const authorize = (req,res,next)=>{
-    if (!req.user.role.equals("admin"))
-        return res.status(403).json({ error: 'Admin access only.' });
-    
+const authorize = (req, res, next) => {
+    if (req.user.role !== "librarian")
+        return res.status(403).json({ error: 'Librarian access only.' });
     next();
 }
 const registerSchema = Joi.object({

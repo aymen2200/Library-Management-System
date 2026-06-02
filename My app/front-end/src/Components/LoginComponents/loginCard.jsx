@@ -6,6 +6,7 @@ import '../../Css/LoginCss/loginCard.css'
 import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
 
 
 const SignInRightSide = () => {
@@ -28,12 +29,17 @@ const SignInRightSide = () => {
                 password,
             });
             if (res.data.token) {
+                const decoded = jwtDecode(res.data.token);
                 localStorage.setItem("token", res.data.token);
-                UserInfo(res.data.name, email, res.data.token);
+                UserInfo(res.data.name, email, res.data.token, decoded.role);
                 setEmail("");
                 setPassword("");
                 login();
-                navigate('/');
+                if (decoded.role === 'librarian') {
+                    navigate('/admin');
+                } else {
+                    navigate('/');
+                }
             }
         } catch (err) {
             const error = err.response?.data?.error
@@ -67,10 +73,15 @@ const SignInRightSide = () => {
                         password: email + '_google_oauth',
                     });
                     if (loginRes.data.token) {
+                        const decoded = jwtDecode(loginRes.data.token);
                         localStorage.setItem("token", loginRes.data.token);
-                        UserInfo(loginRes.data.name, email, loginRes.data.token);
+                        UserInfo(loginRes.data.name, email, loginRes.data.token, decoded.role);
                         login();
-                        navigate("/");
+                        if (decoded.role === 'librarian') {
+                            navigate('/admin');
+                        } else {
+                            navigate('/');
+                        }
                     }
                 } catch (err) {
                     console.error('Google login failed', err);

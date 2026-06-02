@@ -1,5 +1,5 @@
-import Icon from "../components/Icon";
-import Badge from "../components/Badge";
+import Icon from "../components/components/Icon";
+import Badge from "../components/components/Badge";
 import { icons } from "../utils";
 import "./Dashboard.css";
 

@@ -1,16 +1,14 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Icon from "../components/Icon";
-import Badge from "../components/Badge";
-import Modal from "../components/Modal";
-import { FormField, Input, Select } from "../components/FormField";
+import Icon from "../components/components/Icon";
+import Badge from "../components/components/Badge";
+import Modal from "../components/components/Modal";
+import { FormField, Input, Select } from "../components/components/FormField";
 import { icons, today, calcDueDate, isOverdue } from "../utils";
 import "./Borrowings.css";
 
-// ✅ FIX 1: Correct port (3000) and no /api prefix
 const BASE = "http://localhost:3000";
 
-// Normalize a borrowing record from the backend
 const normalizeBorrowing = (r) => ({
   id:         r.BorrowingRecordID ?? r.id,
   bookId:     r.BookID            ?? r.bookId,
@@ -28,13 +26,15 @@ const normalizeBorrowing = (r) => ({
 });
 
 const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
-  const [search,    setSearch]    = useState("");
-  const [filter,    setFilter]    = useState("All");
-  const [showModal, setShowModal] = useState(false);
-  const [form,      setForm]      = useState({ bookId: "", userId: "", dueDate: calcDueDate(14) });
-  const [error,     setError]     = useState(null);
+  const [search,     setSearch]     = useState("");
+  const [filter,     setFilter]     = useState("All");
+  const [showModal,  setShowModal]  = useState(false);
+  const [form,       setForm]       = useState({ bookId: "", userId: "", dueDate: calcDueDate(14) });
+  const [error,      setError]      = useState(null);
+  const [localUsers, setLocalUsers] = useState([]);
+  const [localBooks, setLocalBooks] = useState([]);
 
-  // LOAD ACTIVE BORROWINGS FROM BACKEND
+  // LOAD BORROWINGS
   useEffect(() => {
     axios
       .get(`${BASE}/books/borrowings`)
@@ -42,13 +42,36 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
       .catch((err) => console.error(err));
   }, []);
 
+  // LOAD USERS
+  useEffect(() => {
+    axios.get(`${BASE}/user/get_all_users`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => setLocalUsers(res.data.map(u => ({
+      id: u.UserID,
+      name: u.Name,
+      status: "Active"
+    }))))
+    .catch(err => console.error(err));
+  }, []);
+
+  // LOAD BOOKS
+  useEffect(() => {
+    axios.get(`${BASE}/books`)
+    .then(res => setLocalBooks(res.data.map(b => ({
+      id: b.BookID,
+      title: b.Title,
+      available: b.AvailableCopies
+    }))))
+    .catch(err => console.error(err));
+  }, []);
+
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  // Enrich each borrowing with live status
   const enriched = borrowings.map((b) => ({
     ...b,
-    book:   books.find((x) => x.id === b.bookId),
-    user:   users.find((x) => x.id === b.userId),
+    book:   localBooks.find((x) => x.id === b.bookId),
+    user:   localUsers.find((x) => x.id === b.userId),
     status: b.returnDate
       ? "Returned"
       : isOverdue(b.dueDate, b.returnDate)
@@ -58,8 +81,8 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
 
   const filtered = enriched.filter((b) => {
     const matchSearch =
-      b.book?.title.toLowerCase().includes(search.toLowerCase()) ||
-      b.user?.name.toLowerCase().includes(search.toLowerCase());
+      b.book?.title?.toLowerCase().includes(search.toLowerCase()) ||
+      b.user?.name?.toLowerCase().includes(search.toLowerCase());
     const matchFilter = filter === "All" || b.status === filter;
     return matchSearch && matchFilter;
   });
@@ -67,24 +90,19 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
   // BORROW A BOOK
   const addBorrowing = async () => {
     if (!form.bookId || !form.userId) return;
-    const book = books.find((b) => b.id === +form.bookId);
+    const book = localBooks.find((b) => b.id === +form.bookId);
     if (!book || book.available === 0) return alert("No copies available!");
-    const user = users.find((u) => u.id === +form.userId);
-    if (user?.status === "Suspended") return alert("This user is suspended.");
 
     setError(null);
     try {
-      // ✅ FIX 2: Correct endpoint — POST /books/:id/borrow
       await axios.post(`${BASE}/books/${form.bookId}/borrow`, {
         userid: +form.userId,
       });
 
-      // Re-fetch borrowings so we get real IDs and copy IDs from DB
       const res = await axios.get(`${BASE}/books/borrowings`);
       setBorrowings(res.data.map(normalizeBorrowing));
 
-      // Update local available count
-      setBooks((bs) =>
+      setLocalBooks((bs) =>
         bs.map((b) =>
           b.id === +form.bookId ? { ...b, available: b.available - 1 } : b
         )
@@ -105,18 +123,15 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
 
     setError(null);
     try {
-      // ✅ FIX 3: Correct endpoint — PATCH /books/copies/:copyid/return (not PUT)
       await axios.patch(`${BASE}/books/copies/${record.copyId}/return`);
 
-      // Mark returned locally
       setBorrowings((bs) =>
         bs.map((x) =>
           x.id === id ? { ...x, returnDate: today(), status: "Returned" } : x
         )
       );
 
-      // Update available count
-      setBooks((bs) =>
+      setLocalBooks((bs) =>
         bs.map((x) =>
           x.id === record.bookId ? { ...x, available: x.available + 1 } : x
         )
@@ -140,7 +155,6 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
 
       {error && <p className="error-banner">{error}</p>}
 
-      {/* Search + filter bar */}
       <div className="borrow-toolbar">
         <div className="search-wrap search-wrap--flex">
           <Icon d={icons.search} size={16} stroke="#94a3b8" className="search-icon" />
@@ -198,13 +212,12 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
         </table>
       </div>
 
-      {/* New Borrowing Modal */}
       {showModal && (
         <Modal title="New Borrowing" onClose={() => setShowModal(false)}>
           <FormField label="Select Book *">
             <Select value={form.bookId} onChange={set("bookId")}>
               <option value="">— Choose a book —</option>
-              {books.filter((b) => b.available > 0).map((b) => (
+              {localBooks.filter((b) => b.available > 0).map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.title} ({b.available} available)
                 </option>
@@ -215,7 +228,7 @@ const Borrowings = ({ books, setBooks, users, borrowings, setBorrowings }) => {
           <FormField label="Select User *">
             <Select value={form.userId} onChange={set("userId")}>
               <option value="">— Choose a user —</option>
-              {users.filter((u) => u.status === "Active").map((u) => (
+              {localUsers.filter((u) => u.status === "Active").map((u) => (
                 <option key={u.id} value={u.id}>{u.name}</option>
               ))}
             </Select>

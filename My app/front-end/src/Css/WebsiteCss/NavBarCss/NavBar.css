@@ -1,4 +1,4 @@
-nav,
+
 .navbar {
     display: flex;
     align-items: center;
@@ -157,7 +157,7 @@ nav,
 
 @media (max-width: 920px) {
 
-    nav,
+    
     .navbar {
         padding: 0 12px;
         height: 68px;
@@ -218,7 +218,7 @@ nav,
         display: none;
     }
 
-    nav,
+    
     .navbar {
         padding: 0 8px;
         height: 60px;
@@ -247,7 +247,7 @@ nav,
 @media (max-width: 480px) {
 
 
-    nav,
+    
     .navbar {
         padding: 0 6px;
         height: 56px;

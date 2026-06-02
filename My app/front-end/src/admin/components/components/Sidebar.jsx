@@ -1,5 +1,5 @@
 import Icon from "./Icon";
-import { icons } from "../utils";
+import { icons } from "../../utils.js";
 import "./Sidebar.css";
 
 const navItems = [

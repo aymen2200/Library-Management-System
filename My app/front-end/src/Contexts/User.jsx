@@ -36,9 +36,9 @@ export const UserProvider = ({ children }) => {
   const login = () => setIsAuthenticated(true);
   const toggle = () => setIsNew(!isNew);
 
-  const UserInfo = (name, email, token) => {
-    setCurrentUser({ name, email, id: token })
-  }
+  const UserInfo = (name, email, token, role) => {
+    setCurrentUser({ name, email, id: token, role })
+ }
 
   return (
     <UserContext.Provider value={{ isAuthenticated, isNew, pfp, currentUser, setPfp, setIsNew, login, logout, toggle, UserInfo }}>

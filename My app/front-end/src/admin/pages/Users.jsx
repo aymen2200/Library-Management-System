@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 // ✅ FIX 1: Corrected broken import paths
-import Icon from "../components/Icon";
-import Badge from "../components/Badge";
-import Modal from "../components/Modal";
-import { FormField, Input, Select } from "../components/FormField";
+import Icon from "../components/components/Icon";
+import Badge from "../components/components/Badge";
+import Modal from "../components/components/Modal";
+import { FormField, Input, Select } from "../components/components/FormField";
 import { icons } from "../utils";
 import "./Users.css";
 
