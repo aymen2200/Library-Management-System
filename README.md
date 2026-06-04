@@ -105,3 +105,6 @@ GROUP BY b.BookID
 |---|---|
 | Borrow duration | 14 days |
 | Fine per late day | $0.50 |
+
+
+(P.S:there is a small problem in the project which is that the login is supposed to forward the admin into a different interface than users but instead it forward them to the same one and forward the "librarian" to the other interface, and the "librarian" is not even supposed to be part of the library members but was added to the database by mistake and then to other parts of login system in frontend and backend so if anyone is interesting in helping us he can solve this problem if he wants to test his fullstack abilities and that's all).
